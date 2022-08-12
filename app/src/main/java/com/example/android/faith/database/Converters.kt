@@ -8,7 +8,7 @@ import java.time.temporal.ChronoField
 
 class Converters {
     @TypeConverter
-    public fun stringToListString(value : String): List<String>{
+    fun stringToListString(value : String): List<String>{
         return value.split(",")
     }
     @TypeConverter

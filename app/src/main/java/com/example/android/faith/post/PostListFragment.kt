@@ -1,4 +1,4 @@
-package post
+package com.example.android.faith.post
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,16 +16,6 @@ import com.example.android.faith.databinding.FragmentPostListBinding
  * A fragment representing a list of Items.
  */
 class PostListFragment : Fragment() {
-
-    private var columnCount = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +35,12 @@ class PostListFragment : Fragment() {
         binding.postViewModel = postViewModel
 
         val adapter = PostAdapter()
+
         binding.list.adapter = adapter
 
         postViewModel.posts.observe(viewLifecycleOwner, Observer {
             it?.let{
-                adapter.data = it
+                adapter.submitList(it)
             }
         })
 
@@ -57,32 +48,7 @@ class PostListFragment : Fragment() {
         binding.setLifecycleOwner(this)
 
         return binding.root
-//        val view = inflater.inflate(R.layout.fragment_post_list, container, false)
-        // Set the adapter
-//        if (view is RecyclerView) {
-//            with(view) {
-//                layoutManager = when {
-//                    columnCount <= 1 -> LinearLayoutManager(context)
-//                    else -> GridLayoutManager(context, columnCount)
-//                }
-//                adapter = MyPostRecyclerViewAdapter(PlaceholderContent.ITEMS)
-//            }
-//        }
-//        return view
+
     }
 
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            PostListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
-    }
 }

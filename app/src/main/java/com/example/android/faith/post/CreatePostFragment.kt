@@ -1,10 +1,11 @@
-package post
+package com.example.android.faith.post
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +57,11 @@ class CreatePostFragment : Fragment() {
             savePost(view)
         }
 
+        binding.buttonAddLink.setOnClickListener{view: View ->
+        links.add(binding.textUrlText.text.toString())
+            binding.textUrlText.setText("")
+
+        }
         binding.buttonAddImage.setOnClickListener{view: View ->
             openGalleryForImage()
 

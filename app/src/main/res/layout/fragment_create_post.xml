@@ -107,6 +107,6 @@
     <data>
         <variable
             name="postViewModel"
-            type="post.PostViewModel" />
+            type="com.example.android.faith.post.PostViewModel" />
     </data>
 </layout>

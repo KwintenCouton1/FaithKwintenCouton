@@ -1,13 +1,9 @@
-package post
+package com.example.android.faith.post
 
 import android.app.Application
-import android.graphics.DiscretePathEffect
-import android.media.Image
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.database.Post
 import com.example.android.faith.database.PostDatabaseDao
 import kotlinx.coroutines.*
