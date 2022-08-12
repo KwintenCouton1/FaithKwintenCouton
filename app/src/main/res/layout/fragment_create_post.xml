@@ -7,7 +7,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".CreatePostFragment">
+        tools:context="post.CreatePostFragment">
 
         <TextView
             android:id="@+id/label_post_text"
@@ -100,12 +100,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_url_text" />
+            app:layout_constraintTop_toBottomOf="@+id/text_url_text"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <data>
         <variable
             name="postViewModel"
-            type="com.example.android.faith.PostViewModel" />
+            type="post.PostViewModel" />
     </data>
 </layout>

@@ -1,9 +1,10 @@
-package com.example.android.faith
+package post
 
 import android.app.Application
 import android.graphics.DiscretePathEffect
 import android.media.Image
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.faith.database.FaithDatabase
@@ -12,17 +13,22 @@ import com.example.android.faith.database.PostDatabaseDao
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-class PostViewModel(
+public class PostViewModel(
     val database: PostDatabaseDao,
     application: Application
 ) : AndroidViewModel(application) {
 
     private var viewModelJob = Job()
-//    var text : String = ""
-//    var links : MutableList<String> = mutableListOf()
-//    lateinit var image : Image
-//    var linkText : String = ""
 
+    private val _post = MutableLiveData<Post>()
+
+
+    val posts : LiveData<List<Post>>
+    get() = _posts
+
+
+    val post : LiveData<Post>
+    get() = _post
 
     override fun onCleared() {
         super.onCleared()
@@ -34,7 +40,7 @@ class PostViewModel(
 
     private val newPost = MutableLiveData<Post>()
 
-    private val posts = database.getAll()
+    private val _posts = database.getAll()
 
     init{
         initializeNewPost()
@@ -53,13 +59,14 @@ class PostViewModel(
         }
     }
 
-    fun onCreatePost(){
+    fun onCreatePost(post: Post){
         uiScope.launch {
-            val postToAdd = Post()
-             insert(postToAdd)
+
+             insert(post)
 
             newPost.value = getLatestPostFromDatabase()
         }
+        Timber.i(post.text)
     }
 
     private suspend fun insert(post: Post){

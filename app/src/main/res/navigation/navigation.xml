@@ -18,12 +18,16 @@
     </fragment>
     <fragment
         android:id="@+id/postFragment"
-        android:name="com.example.android.faith.PostListFragment"
+        android:name="post.PostListFragment"
         android:label="fragment_post_list"
         tools:layout="@layout/fragment_post_list" />
     <fragment
         android:id="@+id/createPostFragment"
-        android:name="com.example.android.faith.CreatePostFragment"
+        android:name="post.CreatePostFragment"
         android:label="fragment_create_post"
-        tools:layout="@layout/fragment_create_post" />
+        tools:layout="@layout/fragment_create_post" >
+        <action
+            android:id="@+id/action_createPostFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
 </navigation>

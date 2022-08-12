@@ -6,19 +6,26 @@
     <data>
         <variable
             name="postViewModel"
-            type="com.example.android.faith.PostViewModel" />
+            type="post.PostViewModel" />
     </data>
 
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/list"
-    android:name="com.example.android.faith.PostFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".PostListFragment"
-    tools:listitem="@layout/fragment_post" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:name="com.example.android.faith.PostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context="post.PostListFragment"
+            tools:listitem="@layout/fragment_post" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
