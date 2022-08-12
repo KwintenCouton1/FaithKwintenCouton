@@ -15,8 +15,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
+import com.example.android.faith.database.Link
 import com.example.android.faith.database.Post
 import com.example.android.faith.databinding.FragmentCreatePostBinding
+import com.example.android.faith.post.link.LinkAdapter
+import kotlinx.android.synthetic.main.link_view.*
 import timber.log.Timber
 
 /**
@@ -32,7 +35,7 @@ class CreatePostFragment : Fragment() {
     private val REQUEST_CODE = 100
     private var imageUri: Uri? = null
 
-    private val links : MutableList<String> = mutableListOf()
+    private val links : MutableList<Link> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +52,9 @@ class CreatePostFragment : Fragment() {
         val postViewModel = ViewModelProviders.of(this, viewModelFactory).get(PostViewModel::class.java)
         viewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
 
+
+
+
         binding =  DataBindingUtil.inflate<FragmentCreatePostBinding>(inflater,
             R.layout.fragment_create_post, container, false)
         binding.postViewModel = viewModel
@@ -56,16 +62,23 @@ class CreatePostFragment : Fragment() {
         binding.buttonSave.setOnClickListener{view: View ->
             savePost(view)
         }
+        val linkAdapter = LinkAdapter()
+
+
+
 
         binding.buttonAddLink.setOnClickListener{view: View ->
-        links.add(binding.textUrlText.text.toString())
+        links.add(Link(linkString = binding.textUrlText.text.toString()))
             binding.textUrlText.setText("")
+            linkAdapter.submitList(links)
+            linkAdapter.notifyDataSetChanged()
 
         }
         binding.buttonAddImage.setOnClickListener{view: View ->
             openGalleryForImage()
 
         }
+        binding.links.adapter = linkAdapter
 
         binding.setLifecycleOwner(this)
 
@@ -80,8 +93,8 @@ class CreatePostFragment : Fragment() {
 
     private fun savePost(view: View){
         val postText = binding.textPostText.text.toString()
-        val post = Post(text = postText, links = links)
-        binding.postViewModel?.onCreatePost(post)
+        val post = Post(text = postText)
+        binding.postViewModel?.onCreatePost(post, links)
 
         view.findNavController().navigate(R.id.action_createPostFragment_to_postFragment)
     }

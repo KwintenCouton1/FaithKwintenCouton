@@ -1,6 +1,5 @@
 package com.example.android.faith.post
 
-
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,26 +8,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
 import com.example.android.faith.database.Post
-import com.example.android.faith.databinding.TextItemViewBinding
-import timber.log.Timber
+import com.example.android.faith.database.PostWithLinks
+import com.example.android.faith.databinding.PostViewBinding
 
-
-class PostAdapter : ListAdapter<Post, PostAdapter.PostViewHolder>(PostDiffCallback()){
+class PostAdapter : ListAdapter<PostWithLinks, PostAdapter.PostViewHolder>(PostDiffCallback()){
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         return PostViewHolder.from(parent)
     }
 
-    class PostViewHolder private constructor(val binding: TextItemViewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(item: Post) {
-            binding.post = item
+    class PostViewHolder private constructor(val binding: PostViewBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(item: PostWithLinks) {
+            binding.postWithLinks = item
             binding.executePendingBindings()
         }
 
@@ -36,21 +32,19 @@ class PostAdapter : ListAdapter<Post, PostAdapter.PostViewHolder>(PostDiffCallba
             fun from(parent: ViewGroup): PostViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
-                val binding = TextItemViewBinding.inflate(layoutInflater, parent, false)
+                val binding = PostViewBinding.inflate(layoutInflater, parent, false)
                 return PostViewHolder(binding)
             }
         }
     }
-
-
 }
 
-class PostDiffCallback : DiffUtil.ItemCallback<Post>(){
-    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
-        return oldItem.postId == newItem.postId
+class PostDiffCallback : DiffUtil.ItemCallback<PostWithLinks>(){
+    override fun areItemsTheSame(oldItem: PostWithLinks, newItem: PostWithLinks): Boolean {
+        return oldItem.post.postId == newItem.post.postId
     }
 
-    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+    override fun areContentsTheSame(oldItem: PostWithLinks, newItem: PostWithLinks): Boolean {
         return oldItem == newItem
     }
 

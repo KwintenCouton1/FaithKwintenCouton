@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.android.faith.database.Link
 import com.example.android.faith.database.Post
 import com.example.android.faith.database.PostDatabaseDao
+import com.example.android.faith.database.PostWithLinks
 import kotlinx.coroutines.*
 import timber.log.Timber
 
@@ -19,7 +21,7 @@ public class PostViewModel(
     private val _post = MutableLiveData<Post>()
 
 
-    val posts : LiveData<List<Post>>
+    val posts : LiveData<List<PostWithLinks>>
     get() = _posts
 
 
@@ -34,7 +36,7 @@ public class PostViewModel(
 
     private val uiScope =  CoroutineScope (Dispatchers.Main + viewModelJob)
 
-    private val newPost = MutableLiveData<Post>()
+    private val newPost = MutableLiveData<PostWithLinks>()
 
     private val _posts = database.getAll()
 
@@ -48,26 +50,31 @@ public class PostViewModel(
         }
     }
 
-    private suspend fun getLatestPostFromDatabase(): Post? {
+    private suspend fun getLatestPostFromDatabase(): PostWithLinks? {
         return withContext(Dispatchers.IO){
             var post = database.getLatest()
             post
         }
     }
 
-    fun onCreatePost(post: Post){
+    fun onCreatePost(post: Post, links: List<Link>){
         uiScope.launch {
 
-             insert(post)
+             insert(post, links)
 
             newPost.value = getLatestPostFromDatabase()
         }
         Timber.i(post.text)
     }
 
-    private suspend fun insert(post: Post){
+    private suspend fun insert(post: Post, links: List<Link>){
         withContext(Dispatchers.IO){
-            database.insert(post)
+            var postId = database.insertPost(post)
+
+            links.forEach{
+                database.insertLink(Link(postId = postId, linkString = it.linkString))
+            }
+
         }
     }
 

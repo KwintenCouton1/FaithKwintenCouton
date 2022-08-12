@@ -19,5 +19,5 @@ data class Post(
 
     var created : LocalDateTime = LocalDateTime.now(),
 
-    var links : List<String>
+//    var links : List<Link>
 )

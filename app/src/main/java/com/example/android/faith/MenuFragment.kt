@@ -19,9 +19,6 @@ import timber.log.Timber
  * create an instance of this fragment.
  */
 class MenuFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
