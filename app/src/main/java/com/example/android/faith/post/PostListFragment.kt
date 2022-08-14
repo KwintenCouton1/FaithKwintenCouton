@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentPostListBinding
@@ -34,7 +36,10 @@ class PostListFragment : Fragment() {
 
         binding.postViewModel = postViewModel
 
-        val adapter = PostAdapter()
+        val adapter = PostAdapter(PostListener {
+            postId -> postViewModel.onPostClicked(postId)
+        })
+
 
         binding.list.adapter = adapter
 
@@ -47,6 +52,12 @@ class PostListFragment : Fragment() {
 
         binding.setLifecycleOwner(this)
 
+        postViewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer{ post ->
+            post?.let{
+                this.findNavController().navigate(PostListFragmentDirections.actionPostFragmentToPostDetailFragment(post))
+                postViewModel.onPostDetailNavigated()
+            }
+        })
         return binding.root
 
     }

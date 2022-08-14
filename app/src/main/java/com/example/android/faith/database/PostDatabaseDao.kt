@@ -20,7 +20,7 @@ interface PostDatabaseDao {
 
     @Transaction
     @Query("SELECT * from post_table where postId = :key")
-    fun get(key: Long): PostWithLinks?
+    fun get(key: Long): LiveData<PostWithLinks?>
 
     @Transaction
     @Query("SELECT * FROM post_table")
@@ -28,10 +28,10 @@ interface PostDatabaseDao {
 
     @Transaction
     @Query("SELECT * FROM POST_TABLE WHERE childId = :key")
-    fun getByChildId(key: Long) : PostWithLinks?
+    fun getByChildId(key: Long) : LiveData<PostWithLinks?>
 
     @Transaction
     @Query("SELECT * from POST_TABLE order by created DESC limit 1")
-    fun getLatest(): PostWithLinks?
+    fun getLatest(): LiveData<PostWithLinks?>
 
 }

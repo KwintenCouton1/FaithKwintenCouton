@@ -9,4 +9,8 @@
     <string name="post_add_image">Afbeelding toevoegen</string>
     <string name="post_urls">Links</string>
     <string name="save">Opslaan</string>
+    <string name="create_comment">Commentaar</string>
+    <string name="mark_as_favorite">Favoriet</string>
+    <string name="fun_fact">Fun fact</string>
+    <string name="next">Volgende</string>
 </resources>

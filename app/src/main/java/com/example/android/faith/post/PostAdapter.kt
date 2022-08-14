@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
-import com.example.android.faith.database.Post
 import com.example.android.faith.database.PostWithLinks
 import com.example.android.faith.databinding.PostViewBinding
+import com.example.android.faith.post.link.LinkAdapter
 
-class PostAdapter : ListAdapter<PostWithLinks, PostAdapter.PostViewHolder>(PostDiffCallback()){
+class PostAdapter(val clickListener: PostListener) : ListAdapter<PostWithLinks, PostAdapter.PostViewHolder>(PostDiffCallback()){
+
+
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(getItem(position)!!, clickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -23,8 +25,15 @@ class PostAdapter : ListAdapter<PostWithLinks, PostAdapter.PostViewHolder>(PostD
     }
 
     class PostViewHolder private constructor(val binding: PostViewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(item: PostWithLinks) {
+        fun bind(item: PostWithLinks, clickListener: PostListener) {
             binding.postWithLinks = item
+            binding.clickListener = clickListener
+            val linkAdapter = LinkAdapter()
+
+            binding.postLinksRecyclerView.adapter = linkAdapter
+
+            linkAdapter.submitList(item.links)
+
             binding.executePendingBindings()
         }
 
@@ -50,6 +59,9 @@ class PostDiffCallback : DiffUtil.ItemCallback<PostWithLinks>(){
 
 }
 
+class PostListener( val clickListener: (postId: Long) -> Unit){
+    fun onClick(post : PostWithLinks) = clickListener(post.post.postId)
+}
 
 ///**
 // * [RecyclerView.Adapter] that can display a [PlaceholderItem].

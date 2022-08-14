@@ -2,6 +2,8 @@ package com.example.android.faith.post
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -34,6 +36,7 @@ class CreatePostFragment : Fragment() {
 
     private val REQUEST_CODE = 100
     private var imageUri: Uri? = null
+    private var imageData: Bitmap? = null
 
     private val links : MutableList<Link> = mutableListOf()
 
@@ -82,25 +85,19 @@ class CreatePostFragment : Fragment() {
 
         binding.setLifecycleOwner(this)
 
-//        binding.buttonAddLink.setOnClickListener{view: View ->
-//            viewModel.addLink(binding.textUrlText.text.toString())
-//
-//        }
-
-
         return binding.root
     }
 
     private fun savePost(view: View){
         val postText = binding.textPostText.text.toString()
-        val post = Post(text = postText)
+        val post = Post(text = postText)//, image = imageData
         binding.postViewModel?.onCreatePost(post, links)
 
         view.findNavController().navigate(R.id.action_createPostFragment_to_postFragment)
     }
 
     private fun openGalleryForImage() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI )
+        val intent = Intent(Intent.ACTION_GET_CONTENT)//, MediaStore.Images.Media.INTERNAL_CONTENT_URI
         intent.type = "image/*"
         startActivityForResult(intent, REQUEST_CODE)
     }
@@ -108,8 +105,16 @@ class CreatePostFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE){
-            imageUri = data?.data
-            binding.image.setImageURI(imageUri)
+            data.let{
+                imageUri = data?.data
+
+                var fileString = imageUri?.path.toString()
+                Timber.i("ImagePath = $fileString")
+                imageData = BitmapFactory.decodeFile(fileString)
+                Timber.i("ImageData = $imageData")
+
+                binding.image.setImageBitmap(imageData)
+            }
         }
     }
 }

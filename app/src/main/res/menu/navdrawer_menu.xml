@@ -4,4 +4,7 @@
     <item
         android:id="@+id/postFragment"
         android:title="@string/posts" />
+    <item
+        android:id="@+id/jokeFragment"
+        android:title="@string/fun_fact" />
 </menu>

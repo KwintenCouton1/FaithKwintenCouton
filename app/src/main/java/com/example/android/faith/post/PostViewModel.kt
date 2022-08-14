@@ -20,6 +20,9 @@ public class PostViewModel(
 
     private val _post = MutableLiveData<Post>()
 
+    private val _navigateToPostDetail = MutableLiveData<Long?>()
+    val navigateToPostDetail
+    get() = _navigateToPostDetail
 
     val posts : LiveData<List<PostWithLinks>>
     get() = _posts
@@ -50,19 +53,19 @@ public class PostViewModel(
         }
     }
 
-    private suspend fun getLatestPostFromDatabase(): PostWithLinks? {
-        return withContext(Dispatchers.IO){
-            var post = database.getLatest()
-            post
-        }
-    }
+//    private suspend fun getLatestPostFromDatabase(): PostWithLinks? {
+//        return withContext(Dispatchers.IO){
+//            var post = database.getLatest()
+//            post
+//        }
+//    }
 
     fun onCreatePost(post: Post, links: List<Link>){
         uiScope.launch {
 
              insert(post, links)
 
-            newPost.value = getLatestPostFromDatabase()
+//            newPost.value = getLatestPostFromDatabase()
         }
         Timber.i(post.text)
     }
@@ -77,6 +80,16 @@ public class PostViewModel(
 
         }
     }
+
+    fun onPostClicked(id: Long){
+        _navigateToPostDetail.value = id
+    }
+
+    fun onPostDetailNavigated(){
+        _navigateToPostDetail.value = null
+    }
+
+
 
 
 }

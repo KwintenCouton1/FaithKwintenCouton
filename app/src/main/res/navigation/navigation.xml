@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_menuFragment_to_createPostFragment"
             app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_jokeFragment"
+            app:destination="@id/jokeFragment" />
     </fragment>
     <fragment
         android:id="@+id/postFragment"
@@ -37,5 +40,16 @@
     <fragment
         android:id="@+id/postDetailFragment"
         android:name="com.example.android.faith.post.PostDetailFragment"
-        android:label="PostDetailFragment" />
+        android:label="PostDetailFragment" >
+        <argument
+            android:name="postKey"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jokeFragment"
+        android:name="com.example.android.faith.joke.JokeFragment"
+        android:label="JokeFragment" />
 </navigation>

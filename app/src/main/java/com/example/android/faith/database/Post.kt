@@ -1,5 +1,7 @@
 package com.example.android.faith.database
 
+import android.graphics.Bitmap
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Instant
@@ -15,7 +17,10 @@ data class Post(
 
     var childId: Long = 0L,
 
-    var text : String,
+    var text : String = "",
+
+//    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+//    var image : Bitmap?,
 
     var created : LocalDateTime = LocalDateTime.now(),
 

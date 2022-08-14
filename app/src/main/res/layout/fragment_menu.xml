@@ -30,10 +30,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="31dp"
         android:text="@string/create_post"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_my_post" />
+
+    <Button
+        android:id="@+id/button_fact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fun_fact"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_create_post" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

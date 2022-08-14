@@ -31,6 +31,10 @@ class MenuFragment : Fragment() {
             view.findNavController().navigate(R.id.action_menuFragment_to_createPostFragment)
         }
 
+        binding.buttonFact.setOnClickListener{view : View ->
+            view.findNavController().navigate(MenuFragmentDirections.actionMenuFragmentToJokeFragment())
+        }
+
 
         // Inflate the layout for this fragment
         return binding.root
