@@ -11,8 +11,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.android.faith.R
+import com.example.android.faith.database.Comment
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentPostDetailBinding
+import com.example.android.faith.post.comment.AddCommentListener
+import com.example.android.faith.post.comment.CommentAdapter
+import com.example.android.faith.post.comment.CommentViewModel
+import com.example.android.faith.post.comment.CommentViewModelFactory
 import com.example.android.faith.post.link.LinkAdapter
 
 /**
@@ -34,10 +39,10 @@ class PostDetailFragment : Fragment() {
         val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
 
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
-        val viewModelFactory = PostDetailViewModelFactory(arguments.postKey, dataSource)
+        val postDetailviewModelFactory = PostDetailViewModelFactory(arguments.postKey, dataSource)
 
         val postDetailViewModel =
-            ViewModelProvider(this, viewModelFactory).get(PostDetailViewModel::class.java)
+            ViewModelProvider(this, postDetailviewModelFactory).get(PostDetailViewModel::class.java)
 
         binding.postDetailViewModel = postDetailViewModel
 
@@ -46,6 +51,22 @@ class PostDetailFragment : Fragment() {
         val linkAdapter = LinkAdapter()
 
         binding.postLinks.adapter = linkAdapter
+
+        val commentViewModelFactory = CommentViewModelFactory(dataSource, application)
+        val commentViewModel = ViewModelProvider(this, commentViewModelFactory).get(CommentViewModel::class.java)
+
+        val commentAdapter = CommentAdapter(clickListenerAdd = AddCommentListener {
+            newComment ->
+            commentViewModel.onSubmitComment(newComment)
+        }, commentViewModel)
+
+        binding.comments.adapter = commentAdapter
+
+        commentViewModel.getCommentsOfPost(arguments.postKey).observe(viewLifecycleOwner, Observer {
+            it?.let{
+                commentAdapter.submitList(it)
+            }
+        })
 
         postDetailViewModel.getPost().observe(viewLifecycleOwner, Observer{
             linkAdapter.submitList(it.links)
@@ -59,6 +80,12 @@ class PostDetailFragment : Fragment() {
                 postDetailViewModel.doneNavigating()
             }
         })
+
+        binding.react.setOnClickListener { view: View ->
+            commentViewModel.onSubmitComment(
+                Comment(postId = postDetailViewModel.getPost().value?.post?.postId!!, text = binding.topLevelComment.text.toString())
+            )
+        }
 
         return binding.root
     }

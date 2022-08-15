@@ -8,15 +8,14 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.android.faith.R
-import com.example.android.faith.database.Link
-import com.example.android.faith.database.Post
-import com.example.android.faith.database.PostWithLinks
+import com.example.android.faith.database.Comment
+import com.example.android.faith.database.PostWithLinksAndComments
 import com.example.android.faith.joke.JokeApiStatus
 import timber.log.Timber
 
 
 @BindingAdapter("postText")
-fun TextView.setPostText(item: PostWithLinks?){
+fun TextView.setPostText(item: PostWithLinksAndComments?){
     item?.let {
         Timber.i(item.post.text)
         text = item.post.text
@@ -24,7 +23,7 @@ fun TextView.setPostText(item: PostWithLinks?){
 }
 
 @BindingAdapter("postLinks")
-fun TextView.setLinkStrings(item: PostWithLinks?){
+fun TextView.setLinkStrings(item: PostWithLinksAndComments?){
     item?.let{
         var linkString = ""
 
@@ -71,4 +70,12 @@ fun bindStatus(statusImageView: ImageView, status : JokeApiStatus?){
             statusImageView.visibility = View.GONE
         }
     }
+}
+
+@BindingAdapter("commentText")
+fun TextView.bindCommentText(comment: Comment?){
+    comment?.let{
+        text = it.text
+    }
+
 }

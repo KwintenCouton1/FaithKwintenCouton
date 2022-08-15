@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.android.faith.database.Link
 import com.example.android.faith.database.Post
 import com.example.android.faith.database.PostDatabaseDao
-import com.example.android.faith.database.PostWithLinks
+import com.example.android.faith.database.PostWithLinksAndComments
 import kotlinx.coroutines.*
 import timber.log.Timber
 
@@ -24,7 +24,7 @@ public class PostViewModel(
     val navigateToPostDetail
     get() = _navigateToPostDetail
 
-    val posts : LiveData<List<PostWithLinks>>
+    val posts : LiveData<List<PostWithLinksAndComments>>
     get() = _posts
 
 
@@ -39,7 +39,7 @@ public class PostViewModel(
 
     private val uiScope =  CoroutineScope (Dispatchers.Main + viewModelJob)
 
-    private val newPost = MutableLiveData<PostWithLinks>()
+    private val newPost = MutableLiveData<PostWithLinksAndComments>()
 
     private val _posts = database.getAll()
 

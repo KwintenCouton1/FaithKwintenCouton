@@ -5,12 +5,12 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.faith.database.PostDatabaseDao
-import com.example.android.faith.database.PostWithLinks
+import com.example.android.faith.database.PostWithLinksAndComments
 
 class PostDetailViewModel(private val postKey: Long = 0L,
 val dataSource: PostDatabaseDao): ViewModel() {
 
-    private val post = MediatorLiveData<PostWithLinks>()
+    private val post = MediatorLiveData<PostWithLinksAndComments>()
 
             fun getPost() = post
 
@@ -23,6 +23,10 @@ val dataSource: PostDatabaseDao): ViewModel() {
     val navigateToPostList: LiveData<Boolean?>
     get() =_navigateToPostList
 
+
+    fun onToggleFavorite(){
+        //TODO(implement)
+    }
 
     fun doneNavigating(){
 _navigateToPostList.value =null

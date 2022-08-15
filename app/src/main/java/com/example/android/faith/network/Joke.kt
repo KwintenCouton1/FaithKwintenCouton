@@ -2,7 +2,7 @@ package com.example.android.faith.network
 
 import com.squareup.moshi.Json
 
-data class JokeProperty(
+data class Joke(
     val id : String,
 
     val icon_url : String,

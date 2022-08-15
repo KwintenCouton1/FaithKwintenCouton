@@ -3,7 +3,7 @@ package com.example.android.faith.database
 import android.content.Context
 import androidx.room.*
 
-@Database(entities = [Post::class, Link::class], version = 5, exportSchema = false)
+@Database(entities = [Post::class, Link::class, Comment::class], version = 6, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FaithDatabase : RoomDatabase(){
     abstract val postDatabaseDao: PostDatabaseDao

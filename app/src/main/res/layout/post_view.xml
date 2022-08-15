@@ -6,7 +6,7 @@
     <data>
         <variable
             name="postWithLinks"
-            type="com.example.android.faith.database.PostWithLinks" />
+            type="com.example.android.faith.database.PostWithLinksAndComments" />
         <variable
             name="clickListener"
             type="com.example.android.faith.post.PostListener" />
