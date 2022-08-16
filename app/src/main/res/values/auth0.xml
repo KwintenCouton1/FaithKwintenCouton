@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="com_auth0_domain">devopsfaith.eu.auth0.com</string>
+    <string name="com_auth0_client_id">Oq7gSWNxrjURDXc07kuFWlq735X1aHHI</string>
+</resources>

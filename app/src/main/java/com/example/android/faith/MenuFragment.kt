@@ -1,5 +1,6 @@
 package com.example.android.faith
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,9 +36,22 @@ class MenuFragment : Fragment() {
             view.findNavController().navigate(MenuFragmentDirections.actionMenuFragmentToJokeFragment())
         }
 
+        binding.buttonAccount.setOnClickListener {view: View ->
+            switchToLoginActivity()
+
+        }
 
         // Inflate the layout for this fragment
         return binding.root
     }
 
+
+    private fun switchToLoginActivity(){
+        requireActivity().run{
+            val switchActivityIntent = Intent(activity, Login::class.java)
+            startActivity(switchActivityIntent)
+            finish()
+        }
+
+    }
 }
