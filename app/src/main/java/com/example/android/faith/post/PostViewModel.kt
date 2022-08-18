@@ -4,15 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.android.faith.database.Link
-import com.example.android.faith.database.Post
-import com.example.android.faith.database.PostDatabaseDao
-import com.example.android.faith.database.PostWithLinksAndComments
+import com.example.android.faith.FaithApplication
+import com.example.android.faith.database.*
 import kotlinx.coroutines.*
 import timber.log.Timber
 
 public class PostViewModel(
-    val database: PostDatabaseDao,
+    val postDatabaseDao: PostDatabaseDao,
+    val userDao : UserDao,
+    val currentUserId : String,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -23,10 +23,6 @@ public class PostViewModel(
     private val _navigateToPostDetail = MutableLiveData<Long?>()
     val navigateToPostDetail
     get() = _navigateToPostDetail
-
-    val posts : LiveData<List<PostWithLinksAndComments>>
-    get() = _posts
-
 
     val post : LiveData<Post>
     get() = _post
@@ -39,26 +35,30 @@ public class PostViewModel(
 
     private val uiScope =  CoroutineScope (Dispatchers.Main + viewModelJob)
 
-    private val newPost = MutableLiveData<PostWithLinksAndComments>()
+    private var _currentUser = userDao.getUser(currentUserId)
+    val currentUser : LiveData<UserWithPostsAndLinksAndComments?>
+    get() = _currentUser
 
-    private val _posts = database.getAll()
+    private var _managedPosts : LiveData<List<PostWithLinksAndComments?>> = postDatabaseDao.getPostsByCoachedUsers(currentUserId)
+
+    private var _createdPosts : LiveData<List<PostWithLinksAndComments?>> = postDatabaseDao.getByChildId(currentUserId)
+    val posts: LiveData<List<PostWithLinksAndComments?>>
+    get(){
+        return if (_currentUser.value?.user?.userType == UserType.JONGERE){
+            _createdPosts
+        } else {
+            _managedPosts
+        }
+
+    }
+
 
     init{
-        initializeNewPost()
+        val app = application as FaithApplication
+        val userId : String = app.userProfile?.getId()!!
     }
 
-    private fun initializeNewPost(){
-        uiScope.launch {
 
-        }
-    }
-
-//    private suspend fun getLatestPostFromDatabase(): PostWithLinks? {
-//        return withContext(Dispatchers.IO){
-//            var post = database.getLatest()
-//            post
-//        }
-//    }
 
     fun onCreatePost(post: Post, links: List<Link>){
         uiScope.launch {
@@ -72,10 +72,10 @@ public class PostViewModel(
 
     private suspend fun insert(post: Post, links: List<Link>){
         withContext(Dispatchers.IO){
-            var postId = database.insertPost(post)
+            var postId = postDatabaseDao.insertPost(post)
 
             links.forEach{
-                database.insertLink(Link(postId = postId, linkString = it.linkString))
+                postDatabaseDao.insertLink(Link(postId = postId, linkString = it.linkString))
             }
 
         }

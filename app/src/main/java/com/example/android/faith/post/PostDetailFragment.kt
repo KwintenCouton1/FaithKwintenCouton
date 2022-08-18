@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.Comment
 import com.example.android.faith.database.FaithDatabase
@@ -38,8 +39,14 @@ class PostDetailFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
 
+        val faithApp = application as FaithApplication
+        val userId = faithApp.userProfile?.getId()!!
+
+
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
-        val postDetailviewModelFactory = PostDetailViewModelFactory(arguments.postKey, dataSource)
+        val userDao = FaithDatabase.getInstance(application).userDao
+
+        val postDetailviewModelFactory = PostDetailViewModelFactory(arguments.postKey, userId, dataSource, userDao)
 
         val postDetailViewModel =
             ViewModelProvider(this, postDetailviewModelFactory).get(PostDetailViewModel::class.java)
@@ -55,10 +62,12 @@ class PostDetailFragment : Fragment() {
         val commentViewModelFactory = CommentViewModelFactory(dataSource, application)
         val commentViewModel = ViewModelProvider(this, commentViewModelFactory).get(CommentViewModel::class.java)
 
+
+
         val commentAdapter = CommentAdapter(clickListenerAdd = AddCommentListener {
             newComment ->
             commentViewModel.onSubmitComment(newComment)
-        }, commentViewModel)
+        }, commentViewModel, userId)
 
         binding.comments.adapter = commentAdapter
 
@@ -81,9 +90,17 @@ class PostDetailFragment : Fragment() {
             }
         })
 
+        binding.buttonFavorite.setOnClickListener{view :View ->
+            postDetailViewModel.onToggleFavorite(userId)
+        }
+
         binding.react.setOnClickListener { view: View ->
-            commentViewModel.onSubmitComment(
-                Comment(postId = postDetailViewModel.getPost().value?.post?.postId!!, text = binding.topLevelComment.text.toString())
+            val app : FaithApplication = requireActivity().applicationContext as FaithApplication
+            val userId = app.userProfile?.getId()
+
+                commentViewModel.onSubmitComment(
+
+                Comment(postId = postDetailViewModel.getPost().value?.post?.postId!!, text = binding.topLevelComment.text.toString(), userId = userId!!)
             )
         }
 

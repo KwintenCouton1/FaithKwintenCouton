@@ -1,6 +1,11 @@
 package com.example.android.faith
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.AnimatedImageDrawable
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.isVisible
@@ -16,6 +21,10 @@ import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
 import com.example.android.faith.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.fragment_create_post.*
+import timber.log.Timber
+import java.io.ByteArrayOutputStream
 
 class Login : AppCompatActivity() {
 
@@ -25,6 +34,9 @@ class Login : AppCompatActivity() {
     private lateinit var account: Auth0
     private var cachedCredentials: Credentials? = null
     private var cachedUserProfile: UserProfile? = null
+
+    private var REQUEST_CODE = 200
+    private var imageData : Bitmap? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,12 +56,33 @@ class Login : AppCompatActivity() {
             switchToMainActivity()
         }
 
+        binding.profilePicture.setOnClickListener {
+            chooseProfilePicture()
+        }
+
 
         val app = applicationContext as FaithApplication
         cachedCredentials = app.userCredentials
         cachedUserProfile = app.userProfile
 
         updateUI()
+    }
+
+    private fun chooseProfilePicture() {
+        val intent = Intent(Intent.ACTION_PICK)//, MediaStore.Images.Media.INTERNAL_CONTENT_URI
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE){
+            data.let{
+
+                binding.profilePicture.setImageURI(data?.data)
+                imageData = (binding.profilePicture.drawable as BitmapDrawable).bitmap
+            }
+        }
     }
 
     private fun login() {
@@ -158,7 +191,15 @@ class Login : AppCompatActivity() {
                     updateUI()
 
                     val country = userProfile.getUserMetadata()["country"] as String?
+                    val profilePicture = userProfile.getUserMetadata()["profilePicture"] as ByteArray
                     binding.edittextCountry.setText(country)
+
+
+                    profilePicture.let{
+                        val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size )
+                        binding.profilePicture.setImageBitmap(bitmap)
+                    }
+
                 }
 
             })
@@ -171,7 +212,12 @@ class Login : AppCompatActivity() {
         }
 
         val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-        val metadata = mapOf("country" to binding.edittextCountry.text.toString())
+        val imageStream = ByteArrayOutputStream()
+        imageData?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
+        val metadata = mapOf(
+            "country" to binding.edittextCountry.text.toString(),
+            "profilePicture" to imageStream.toByteArray()
+        )
 
         usersClient
             .updateMetadata(cachedUserProfile!!.getId()!!, metadata)
@@ -180,6 +226,7 @@ class Login : AppCompatActivity() {
                 override fun onFailure(exception: ManagementException) {
                     showSnackBar(getString(R.string.general_failure_with_exception_code,
                         exception.getCode()))
+                    Timber.i(exception.getCode())
                 }
 
                 override fun onSuccess(profile: UserProfile) {
@@ -203,12 +250,21 @@ class Login : AppCompatActivity() {
         binding.buttonLogin.isEnabled = !isLoggedIn
         binding.buttonLogout.isEnabled = isLoggedIn
         binding.linearlayoutMetadata.isVisible = isLoggedIn
+        binding.buttonToMenu.isVisible = isLoggedIn
 
         binding.textviewUserProfile.isVisible = isLoggedIn
 
         val userName = cachedUserProfile?.name ?: ""
         val userEmail = cachedUserProfile?.email ?: ""
         binding.textviewUserProfile.text = getString(R.string.user_profile, userName, userEmail)
+
+        cachedUserProfile?.let{
+            if (!it.pictureURL.isNullOrEmpty()){
+                binding.profilePicture.setImageURI(Uri.parse(cachedUserProfile?.pictureURL))
+            }
+
+        }
+
 
         if (!isLoggedIn) {
             binding.edittextCountry.setText("")
@@ -223,4 +279,6 @@ class Login : AppCompatActivity() {
                 Snackbar.LENGTH_LONG
             ).show()
     }
+
+
 }

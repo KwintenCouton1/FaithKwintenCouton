@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.faith.database.Comment
 import com.example.android.faith.databinding.CommentViewBinding
 
-class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewModel: CommentViewModel): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(CommentDiffCallback()){
+class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewModel: CommentViewModel, val userId : String): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(CommentDiffCallback()){
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(getItem(position)!!, clickListenerAdd, commentViewModel)
+        holder.bind(getItem(position)!!, clickListenerAdd, commentViewModel, userId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -20,12 +20,14 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewMo
 
 
     class CommentViewHolder private constructor(val binding: CommentViewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(item : Comment, clickListenerAdd: AddCommentListener, commentViewModel: CommentViewModel){
+        fun bind(item : Comment, clickListenerAdd: AddCommentListener, commentViewModel: CommentViewModel, userId: String){
             binding.comment = item
             binding.newComment = Comment(
                 postId = item.postId,
                 reactionToCommentId = item.commentId,
-                text = "")
+                text = "",
+                userId = userId
+                )
             binding.clickListenerAdd = clickListenerAdd
 
             val adapter = CommentAdapter(
@@ -37,7 +39,7 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewMo
 //                    text = binding.editTextComment.text.toString())
 //                commentViewModel.onSubmitComment(comment)
 //            }
-        , commentViewModel)
+        , commentViewModel, userId)
 
             binding.reactions.adapter = adapter
             adapter.submitList(commentViewModel.getCommentsOfPost(item.commentId).value)

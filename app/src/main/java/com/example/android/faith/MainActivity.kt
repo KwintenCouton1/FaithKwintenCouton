@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
         "devopsfaith.eu.auth0.com"
         )
 
-//        var app = applicationContext as FaithApplication
-//        if (app.userProfile == null){
-//            switchToLoginActivity()
-//        }
+        var app = applicationContext as FaithApplication
+        if (app.userProfile == null){
+            switchToLoginActivity()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

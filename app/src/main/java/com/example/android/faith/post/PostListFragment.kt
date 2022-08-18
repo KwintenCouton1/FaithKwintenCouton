@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentPostListBinding
@@ -29,8 +30,11 @@ class PostListFragment : Fragment() {
         val application = requireNotNull(this.activity).application
 
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
+        val userDao = FaithDatabase.getInstance(application).userDao
 
-        val viewModelFactory = PostViewModelFactory(dataSource, application)
+        val app = application as FaithApplication
+
+        val viewModelFactory = PostViewModelFactory(dataSource, userDao, app.userProfile?.getId()!!, application)
 
         val postViewModel = ViewModelProviders.of(this, viewModelFactory).get(PostViewModel::class.java)
 
@@ -43,11 +47,20 @@ class PostListFragment : Fragment() {
 
         binding.list.adapter = adapter
 
-        postViewModel.posts.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                adapter.submitList(it)
-            }
+        postViewModel.currentUser.observe(viewLifecycleOwner, Observer {
+            postViewModel.posts.observe(viewLifecycleOwner, Observer {
+                it.let{
+                    adapter.submitList(it)
+                }
+            })
         })
+
+
+//        postViewModel.posts.observe(viewLifecycleOwner, Observer {
+//            it?.let{
+//                adapter.submitList(it)
+//            }
+//        })
 
 
         binding.setLifecycleOwner(this)

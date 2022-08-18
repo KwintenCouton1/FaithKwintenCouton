@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.android.faith.FaithApplication
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -15,14 +16,16 @@ data class Post(
     @PrimaryKey(autoGenerate = true )
     var postId: Long = 0L,
 
-    var childId: Long = 0L,
-
     var text : String = "",
 
-//    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-//    var image : Bitmap?,
+    var userId : String,
+
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    var image : ByteArray? = null,
 
     var created : LocalDateTime = LocalDateTime.now(),
+
+    var favorited : Boolean = false,
 
 //    var links : List<Link>
 )

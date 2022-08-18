@@ -12,7 +12,7 @@ data class Comment(
 
     var reactionToCommentId: Long = 0L,
 
-    //var userId : Long,
+    var userId : String,
 
     var text : String,
 

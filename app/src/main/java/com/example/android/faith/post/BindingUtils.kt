@@ -1,9 +1,12 @@
 package com.example.android.faith.post
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -31,8 +34,23 @@ fun TextView.setLinkStrings(item: PostWithLinksAndComments?){
         text = linkString
         Timber.i(linkString)
     }
+}
+
+@BindingAdapter("image")
+fun ImageView.setPostImage(item: ByteArray?){
+
+        item?.let{
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size )
+            setImageBitmap(bitmap)
+            isVisible= true
+        } ?: run{
+            isVisible = false
+        }
+
 
 }
+
+
 
 @BindingAdapter("jokeText")
 fun TextView.setJokeText(item: String?){

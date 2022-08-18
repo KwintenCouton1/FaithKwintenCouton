@@ -6,6 +6,7 @@ import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.example.android.faith.MainActivity
 
 import com.example.android.faith.database.PostWithLinksAndComments
 import com.example.android.faith.databinding.PostViewBinding
