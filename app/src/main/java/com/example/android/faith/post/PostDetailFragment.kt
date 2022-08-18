@@ -1,14 +1,13 @@
 package com.example.android.faith.post
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
@@ -28,6 +27,8 @@ import com.example.android.faith.post.link.LinkAdapter
  */
 class PostDetailFragment : Fragment() {
     lateinit var binding : FragmentPostDetailBinding
+    lateinit var postDetailViewModel : PostDetailViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +49,7 @@ class PostDetailFragment : Fragment() {
 
         val postDetailviewModelFactory = PostDetailViewModelFactory(arguments.postKey, userId, dataSource, userDao)
 
-        val postDetailViewModel =
+        postDetailViewModel =
             ViewModelProvider(this, postDetailviewModelFactory).get(PostDetailViewModel::class.java)
 
         binding.postDetailViewModel = postDetailViewModel
@@ -103,8 +104,40 @@ class PostDetailFragment : Fragment() {
                 Comment(postId = postDetailViewModel.getPost().value?.post?.postId!!, text = binding.topLevelComment.text.toString(), userId = userId!!)
             )
         }
+        setHasOptionsMenu(true)
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.post_detail_menu, menu)
+        //var editPostMenuItem = menu.findItem(R.id.editPost)
+
+        val app : FaithApplication = requireActivity().applicationContext as FaithApplication
+
+        //editPostMenuItem.setVisible(postDetailViewModel.getPost().value?.post?.userId == app.userProfile?.getId())
+
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.editPost -> {
+                navigateToEditFragment()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    }
+
+    private fun navigateToEditFragment(){
+        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
+
+        var action = PostDetailFragmentDirections.actionPostDetailFragmentToCreatePostFragment()
+        action.postKey = arguments.postKey
+        view?.findNavController()?.navigate(action)
     }
 
 

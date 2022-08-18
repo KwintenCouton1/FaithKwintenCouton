@@ -14,8 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
@@ -24,6 +26,7 @@ import com.example.android.faith.database.Post
 import com.example.android.faith.databinding.FragmentCreatePostBinding
 import com.example.android.faith.post.link.LinkAdapter
 import kotlinx.android.synthetic.main.link_view.*
+import okhttp3.internal.notify
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 
@@ -33,7 +36,7 @@ import java.io.ByteArrayOutputStream
  * create an instance of this fragment.
  */
 class CreatePostFragment : Fragment() {
-    private lateinit var viewModel : PostViewModel
+    private lateinit var viewModel : CreatePostViewModel
     private lateinit var binding : FragmentCreatePostBinding
 
 
@@ -53,24 +56,38 @@ class CreatePostFragment : Fragment() {
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val userDao = FaithDatabase.getInstance(application).userDao
 
+        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
+
         val app = application as FaithApplication
 
-        val viewModelFactory = PostViewModelFactory(dataSource, userDao, app.userProfile?.getId()!!, application)
-
-        val postViewModel = ViewModelProviders.of(this, viewModelFactory).get(PostViewModel::class.java)
-        viewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
+        val createPostViewModelFactory = CreatePostViewModelFactory(arguments.postKey,dataSource,  application)
 
 
+        viewModel = ViewModelProviders.of(this, createPostViewModelFactory).get(CreatePostViewModel::class.java)
+
+        val linkAdapter = LinkAdapter()
+
+        viewModel.post.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                links.clear()
+                links.addAll(it.links)
+                linkAdapter.submitList(links)
+                linkAdapter.notifyDataSetChanged()
+            }
+
+        })
 
 
         binding =  DataBindingUtil.inflate<FragmentCreatePostBinding>(inflater,
             R.layout.fragment_create_post, container, false)
-        binding.postViewModel = viewModel
+        binding.createPostViewModel = viewModel
+
+
 
         binding.buttonSave.setOnClickListener{view: View ->
             savePost(view)
         }
-        val linkAdapter = LinkAdapter()
+
 
 
 
@@ -94,6 +111,7 @@ class CreatePostFragment : Fragment() {
     }
 
     private fun savePost(view: View){
+        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
         val postText = binding.textPostText.text.toString()
 
         val app = requireActivity().applicationContext as FaithApplication
@@ -102,8 +120,8 @@ class CreatePostFragment : Fragment() {
         val imageStream = ByteArrayOutputStream()
                 imageData?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
 
-        val post = Post(text = postText, image= imageStream.toByteArray(), userId = userId!!)//, image = imageData
-        binding.postViewModel?.onCreatePost(post, links)
+        val post = Post(postId = arguments.postKey, text = postText, image= imageStream.toByteArray(), userId = userId!!)//, image = imageData
+        binding.createPostViewModel?.onCreatePost(post, links)
 
         view.findNavController().navigate(R.id.action_createPostFragment_to_postFragment)
     }

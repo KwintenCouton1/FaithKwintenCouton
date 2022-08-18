@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="createPostViewModel"
+            type="com.example.android.faith.post.CreatePostViewModel" />
+        <variable
+            name="postViewModel"
+            type="com.example.android.faith.post.PostViewModel" />
+    </data>
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
@@ -29,7 +38,8 @@
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:postText="@{createPostViewModel.post}"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/links"
@@ -48,7 +58,8 @@
             app:layout_constraintBottom_toTopOf="@+id/links"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_post_text" />
+            app:layout_constraintTop_toBottomOf="@+id/text_post_text"
+            app:image="@{createPostViewModel.post.post.image}"/>
 
         <Button
             android:id="@+id/button_add_image"
@@ -104,9 +115,4 @@
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <data>
-        <variable
-            name="postViewModel"
-            type="com.example.android.faith.post.PostViewModel" />
-    </data>
 </layout>

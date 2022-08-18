@@ -13,12 +13,13 @@ class PostViewModelFactory (
     private val dataSource : PostDatabaseDao,
     private val userDao : UserDao,
     private val currentUserId : String,
+    //private val postKey : Long,
     private val application: Application
         ): ViewModelProvider.Factory{
             @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(PostViewModel::class.java)){
-                    return PostViewModel(dataSource, userDao, currentUserId,  application) as T
+                    return PostViewModel(dataSource, userDao, currentUserId, /*postKey,*/ application) as T
                 }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -36,6 +36,10 @@
         <action
             android:id="@+id/action_createPostFragment_to_postFragment"
             app:destination="@id/postFragment" />
+        <argument
+            android:name="postKey"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/postDetailFragment"
@@ -47,6 +51,9 @@
         <action
             android:id="@+id/action_postDetailFragment_to_postFragment"
             app:destination="@id/postFragment" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/jokeFragment"

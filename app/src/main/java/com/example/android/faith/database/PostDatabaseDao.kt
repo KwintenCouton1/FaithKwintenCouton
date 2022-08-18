@@ -6,10 +6,10 @@ import androidx.room.*
 @Dao
 interface PostDatabaseDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPost(post: Post) : Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLink(link : Link): Long
 
     @Insert
@@ -25,7 +25,8 @@ interface PostDatabaseDao {
     @Update
     fun updateComment(comment:Comment)
 
-
+    @Query("DELETE FROM link_table where postId = :key")
+    fun deleteLinksOfPost(key : Long)
 
     @Transaction
     @Query("SELECT * from post_table where postId = :key")

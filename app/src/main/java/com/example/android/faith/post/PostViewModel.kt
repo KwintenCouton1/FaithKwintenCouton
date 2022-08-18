@@ -13,19 +13,20 @@ public class PostViewModel(
     val postDatabaseDao: PostDatabaseDao,
     val userDao : UserDao,
     val currentUserId : String,
+    //val postKey : Long,
     application: Application
 ) : AndroidViewModel(application) {
 
     private var viewModelJob = Job()
 
-    private val _post = MutableLiveData<Post>()
+    //private val _post = postDatabaseDao.get(postKey)
 
     private val _navigateToPostDetail = MutableLiveData<Long?>()
     val navigateToPostDetail
     get() = _navigateToPostDetail
 
-    val post : LiveData<Post>
-    get() = _post
+    //val post : LiveData<PostWithLinksAndComments?>
+    //get() = _post
 
     override fun onCleared() {
         super.onCleared()
@@ -64,10 +65,7 @@ public class PostViewModel(
         uiScope.launch {
 
              insert(post, links)
-
-//            newPost.value = getLatestPostFromDatabase()
         }
-        Timber.i(post.text)
     }
 
     private suspend fun insert(post: Post, links: List<Link>){
