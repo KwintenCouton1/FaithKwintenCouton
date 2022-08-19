@@ -14,10 +14,7 @@ import com.example.android.faith.R
 import com.example.android.faith.database.Comment
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentPostDetailBinding
-import com.example.android.faith.post.comment.AddCommentListener
-import com.example.android.faith.post.comment.CommentAdapter
-import com.example.android.faith.post.comment.CommentViewModel
-import com.example.android.faith.post.comment.CommentViewModelFactory
+import com.example.android.faith.post.comment.*
 import com.example.android.faith.post.link.LinkAdapter
 
 /**
@@ -61,17 +58,30 @@ class PostDetailFragment : Fragment() {
 
         binding.postLinks.adapter = linkAdapter
 
-        val commentViewModelFactory = CommentViewModelFactory(dataSource, application)
+        val commentViewModelFactory = CommentViewModelFactory(0L, dataSource, application)
         val commentViewModel = ViewModelProvider(this, commentViewModelFactory).get(CommentViewModel::class.java)
 
 
 
-        val commentAdapter = CommentAdapter(clickListenerAdd = AddCommentListener {
-            newComment ->
-            commentViewModel.onSubmitComment(newComment)
-        }, commentViewModel, userId)
+        val commentAdapter = CommentAdapter(
+            clickListenerAdd = AddCommentListener {
+                newComment ->
+                commentViewModel.onSubmitComment(newComment)
+            },
+            clickListenerReactions = ReactionsListener {
+                commentId ->
+                 commentViewModel.onDisplayReactions(commentId)
+            }
+            ,commentViewModel, userId)
 
         binding.comments.adapter = commentAdapter
+
+        commentViewModel.navigateToCommentReactions.observe(viewLifecycleOwner, Observer{comment ->
+            comment?.let{
+                this.findNavController().navigate(PostDetailFragmentDirections.actionPostDetailFragmentToCommentReactionFragment(comment))
+                commentViewModel.onReactionsDisplayed()
+            }
+        })
 
         commentViewModel.getCommentsOfPost(arguments.postKey).observe(viewLifecycleOwner, Observer {
             it?.let{

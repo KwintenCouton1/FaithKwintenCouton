@@ -1,6 +1,7 @@
 package com.example.android.faith.database
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 @Dao
@@ -28,6 +29,10 @@ interface PostDatabaseDao {
     @Query("DELETE FROM link_table where postId = :key")
     fun deleteLinksOfPost(key : Long)
 
+
+    @Query("SELECT * FROM COMMENT_TABLE WHERE commentId = :key")
+    fun getComment(key : Long): LiveData<Comment>
+
     @Transaction
     @Query("SELECT * from post_table where postId = :key")
     fun get(key: Long): LiveData<PostWithLinksAndComments?>
@@ -44,7 +49,7 @@ interface PostDatabaseDao {
     @Query("SELECT * from POST_TABLE order by created DESC limit 1")
     fun getLatest(): LiveData<PostWithLinksAndComments?>
 
-    @Query("SELECT * from COMMENT_TABLE where postId = :key")
+    @Query("SELECT * from COMMENT_TABLE where postId = :key and reactionToCommentId = 0")
     fun getCommentsByPost(key : Long): LiveData<List<Comment>>
 
     @Query("SELECT * from COMMENT_TABLE WHERE reactionToCommentId = :key")

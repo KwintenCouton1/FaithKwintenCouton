@@ -4,16 +4,32 @@ import android.app.Application
 import android.provider.SyncStateContract.Helpers.insert
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.android.faith.database.Comment
 import com.example.android.faith.database.PostDatabaseDao
 import kotlinx.coroutines.*
+import timber.log.Timber
 
-class CommentViewModel(val database: PostDatabaseDao,
-application: Application): AndroidViewModel(application) {
+class CommentViewModel(
+    private val commentKey : Long = 0L,
+    val database: PostDatabaseDao,
+    application: Application): AndroidViewModel(application) {
     private var viewModelJob = Job()
 
     private lateinit var  _commentsOfPost: LiveData<List<Comment>>
+
+    private val _navigateToCommentReactions = MutableLiveData<Long?>()
+    val navigateToCommentReactions
+        get() = _navigateToCommentReactions
+
+    private val comment = MediatorLiveData<Comment>()
+    fun getComment() = comment
+
+    init{
+        comment.addSource(database.getComment(commentKey), comment::setValue)
+        Timber.i(commentKey.toString())
+    }
 
     fun getCommentsOfPost(key: Long) :  LiveData<List<Comment>>{
         _commentsOfPost = database.getCommentsByPost(key)
@@ -23,7 +39,6 @@ application: Application): AndroidViewModel(application) {
     private lateinit var _commentsOfParent : LiveData<List<Comment>>
 
     fun getCommentsOfParent(key : Long) : LiveData<List<Comment>>{
-
         _commentsOfParent = database.getCommentsByParent(key)
         return _commentsOfParent
     }
@@ -48,5 +63,12 @@ application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun onDisplayReactions(commentId: Long) {
+        _navigateToCommentReactions.value = commentId
+    }
+
+    fun onReactionsDisplayed(){
+        _navigateToCommentReactions.value = null
+    }
 
 }

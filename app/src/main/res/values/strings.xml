@@ -17,9 +17,10 @@
     <string name="react">Reageer</string>
 
     <string name="edit">Wijzig</string>
+    <string name="reactions">Reacties</string>
 
 
-<string name="account">Account</string>
+    <string name="account">Account</string>
     <string name="com_auth0_scheme">app</string>
     <string name="login_scopes">openid profile email read:current_user update:current_user_metadata</string>
     <string name="login_audience">https://%1$s/api/v2/</string>

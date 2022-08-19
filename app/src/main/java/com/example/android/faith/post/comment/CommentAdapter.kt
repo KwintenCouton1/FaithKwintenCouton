@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.faith.database.Comment
 import com.example.android.faith.databinding.CommentViewBinding
 
-class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewModel: CommentViewModel, val userId : String): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(CommentDiffCallback()){
+class CommentAdapter(val clickListenerAdd: AddCommentListener, val clickListenerReactions: ReactionsListener, val commentViewModel: CommentViewModel, val userId : String): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(CommentDiffCallback()){
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(getItem(position)!!, clickListenerAdd, commentViewModel, userId)
+        holder.bind(getItem(position)!!, clickListenerAdd, clickListenerReactions, commentViewModel, userId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -20,7 +20,7 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewMo
 
 
     class CommentViewHolder private constructor(val binding: CommentViewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(item : Comment, clickListenerAdd: AddCommentListener, commentViewModel: CommentViewModel, userId: String){
+        fun bind(item : Comment, clickListenerAdd: AddCommentListener, clickListenerReactions: ReactionsListener, commentViewModel: CommentViewModel, userId: String){
             binding.comment = item
             binding.newComment = Comment(
                 postId = item.postId,
@@ -30,20 +30,7 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val commentViewMo
                 )
             binding.clickListenerAdd = clickListenerAdd
 
-            val adapter = CommentAdapter(
-                clickListenerAdd
-//                AddCommentListener { commentId, postId, text ->
-//                var comment = Comment(
-//                    postId = item.postId,
-//                    reactionToCommentId = commentId,
-//                    text = binding.editTextComment.text.toString())
-//                commentViewModel.onSubmitComment(comment)
-//            }
-        , commentViewModel, userId)
-
-            binding.reactions.adapter = adapter
-            adapter.submitList(commentViewModel.getCommentsOfPost(item.commentId).value)
-
+            binding.clickListenerReactions = clickListenerReactions
         }
 
         companion object{
@@ -76,4 +63,8 @@ class CommentDiffCallback: DiffUtil.ItemCallback<Comment>(){
 class AddCommentListener(val clickListener: (newComment : Comment) -> Unit){
     fun onClick(comment : Comment) = clickListener(comment)
 
+}
+
+class ReactionsListener(val clickListener : (commentId: Long) -> Unit){
+    fun onClick(commentId : Long) = clickListener(commentId)
 }

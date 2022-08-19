@@ -17,6 +17,9 @@
         <variable
             name="clickListenerAdd"
             type="com.example.android.faith.post.comment.AddCommentListener"/>
+        <variable
+            name="clickListenerReactions"
+            type="com.example.android.faith.post.comment.ReactionsListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,17 +48,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextComment" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reactions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_react" />
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/reactions"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/button_react" />-->
 
         <EditText
             android:id="@+id/editTextComment"
@@ -76,6 +79,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="20dp" />
+
+        <Button
+            android:id="@+id/reactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reactions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextComment"
+            android:onClick="@{() -> clickListenerReactions.onClick(comment.commentId)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

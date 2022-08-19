@@ -54,9 +54,24 @@
         <action
             android:id="@+id/action_postDetailFragment_to_createPostFragment"
             app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_commentReactionFragment"
+            app:destination="@id/commentReactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/jokeFragment"
         android:name="com.example.android.faith.joke.JokeFragment"
         android:label="JokeFragment" />
+    <fragment
+        android:id="@+id/commentReactionFragment"
+        android:name="com.example.android.faith.post.comment.CommentReactionFragment"
+        android:label="fragment_comment_reaction"
+        tools:layout="@layout/fragment_comment_reaction" >
+        <argument
+            android:name="commentId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_commentReactionFragment_self"
+            app:destination="@id/commentReactionFragment" />
+    </fragment>
 </navigation>
