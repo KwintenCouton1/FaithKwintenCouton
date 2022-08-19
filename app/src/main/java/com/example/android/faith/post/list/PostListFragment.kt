@@ -71,14 +71,7 @@ class PostListFragment : Fragment() {
         })
 
 
-//        postViewModel.posts.observe(viewLifecycleOwner, Observer {
-//            it?.let{
-//                adapter.submitList(it)
-//            }
-//        })
-
-
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         binding.favoritesSwitch.setOnCheckedChangeListener{compoundButton, value ->
             postViewModel.toggleFavorites(value)

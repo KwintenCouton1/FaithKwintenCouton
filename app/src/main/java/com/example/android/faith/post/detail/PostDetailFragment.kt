@@ -1,5 +1,6 @@
 package com.example.android.faith.post.detail
 
+import android.app.Application
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.Comment
 import com.example.android.faith.database.FaithDatabase
+import com.example.android.faith.database.PostDatabaseDao
 import com.example.android.faith.databinding.FragmentPostDetailBinding
 import com.example.android.faith.post.comment.*
 import com.example.android.faith.post.link.LinkAdapter
@@ -25,8 +27,6 @@ class PostDetailFragment : Fragment() {
     lateinit var binding : FragmentPostDetailBinding
     lateinit var postDetailViewModel : PostDetailViewModel
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,47 +35,72 @@ class PostDetailFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_detail, container, false)
 
         val application = requireNotNull(this.activity).application
-        val arguments =
-            PostDetailFragmentArgs.fromBundle(requireArguments())
+        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
 
         val faithApp = application as FaithApplication
         val userId = faithApp.userProfile?.getId()!!
 
 
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
-        val userDao = FaithDatabase.getInstance(application).userDao
 
-        val postDetailviewModelFactory = PostDetailViewModelFactory(arguments.postKey, userId, dataSource, userDao)
-
-        postDetailViewModel =
-            ViewModelProvider(this, postDetailviewModelFactory).get(PostDetailViewModel::class.java)
-
-        binding.postDetailViewModel = postDetailViewModel
+        initializePostDetailViewModel(application, dataSource, arguments, userId)
 
         binding.lifecycleOwner = this
 
+        val linkAdapter = initializeLinkAdapter()
+
+        val commentViewModel = initializeCommentViewModel(application, dataSource)
+
+        val commentAdapter = initializeCommentAdapter(commentViewModel, userId)
+
+        initializeObservers(commentViewModel, commentAdapter, linkAdapter, arguments)
+
+        setHasOptionsMenu(true)
+
+        return binding.root
+    }
+
+    private fun initializePostDetailViewModel(application: Application, postDao : PostDatabaseDao, arguments: PostDetailFragmentArgs, userId :String): PostDetailViewModel{
+        val userDao = FaithDatabase.getInstance(application).userDao
+
+        val postDetailViewModelFactory = PostDetailViewModelFactory(arguments.postKey, userId, postDao, userDao)
+
+        postDetailViewModel =
+            ViewModelProvider(this, postDetailViewModelFactory).get(PostDetailViewModel::class.java)
+
+        binding.postDetailViewModel = postDetailViewModel
+        return postDetailViewModel
+    }
+
+    private fun initializeCommentViewModel(application: Application, postDao: PostDatabaseDao): CommentViewModel{
+        val commentViewModelFactory = CommentViewModelFactory(0L, postDao, application)
+        return ViewModelProvider(this, commentViewModelFactory).get(CommentViewModel::class.java)
+    }
+
+    private fun initializeLinkAdapter(): LinkAdapter{
         val linkAdapter = LinkAdapter()
 
         binding.postLinks.adapter = linkAdapter
+        return linkAdapter
+    }
 
-        val commentViewModelFactory = CommentViewModelFactory(0L, dataSource, application)
-        val commentViewModel = ViewModelProvider(this, commentViewModelFactory).get(CommentViewModel::class.java)
-
-
-
+    private fun initializeCommentAdapter(commentViewModel: CommentViewModel, userId: String): CommentAdapter{
         val commentAdapter = CommentAdapter(
             clickListenerAdd = AddCommentListener {
-                newComment ->
+                    newComment ->
                 commentViewModel.onSubmitComment(newComment)
             },
             clickListenerReactions = ReactionsListener {
-                commentId ->
-                 commentViewModel.onDisplayReactions(commentId)
+                    commentId ->
+                commentViewModel.onDisplayReactions(commentId)
             }
             ,commentViewModel, userId)
 
         binding.comments.adapter = commentAdapter
+        return commentAdapter
+    }
 
+    private fun initializeObservers(commentViewModel : CommentViewModel, commentAdapter : CommentAdapter, linkAdapter: LinkAdapter, arguments: PostDetailFragmentArgs){
         commentViewModel.navigateToCommentReactions.observe(viewLifecycleOwner, Observer{comment ->
             comment?.let{
                 this.findNavController().navigate(
@@ -111,14 +136,11 @@ class PostDetailFragment : Fragment() {
             val app : FaithApplication = requireActivity().applicationContext as FaithApplication
             val userId = app.userProfile?.getId()
 
-                commentViewModel.onSubmitComment(
+            commentViewModel.onSubmitComment(
 
                 Comment(postId = postDetailViewModel.getPost().value?.post?.postId!!, text = binding.topLevelComment.text.toString(), userId = userId!!)
             )
         }
-        setHasOptionsMenu(true)
-
-        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -163,6 +185,8 @@ class PostDetailFragment : Fragment() {
         action.postKey = arguments.postKey
         view?.findNavController()?.navigate(action)
     }
+
+
 
 
 }

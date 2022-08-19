@@ -1,5 +1,6 @@
 package com.example.android.faith.post.comment
 
+import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,41 +24,60 @@ class CommentReactionFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val binding = DataBindingUtil.inflate<FragmentCommentReactionBinding>(inflater, R.layout.fragment_comment_reaction, container, false)
-
-
-        val arguments = CommentReactionFragmentArgs.fromBundle(requireArguments())
+        binding = DataBindingUtil.inflate<FragmentCommentReactionBinding>(inflater, R.layout.fragment_comment_reaction, container, false)
 
         val application = requireNotNull(this.activity).application
+        val arguments = CommentReactionFragmentArgs.fromBundle(requireArguments())
 
+
+        val commentViewModel = initializeViewModel(application, arguments)
+
+        val commentAdapter = initializeAdapter(commentViewModel, application)
+
+        initializeObservers(commentAdapter,commentViewModel, arguments)
+
+        binding.lifecycleOwner = this
+
+        return binding.root
+    }
+
+    private fun initializeViewModel(
+        application: Application,
+        arguments: CommentReactionFragmentArgs
+    ): CommentViewModel {
         val postDao = FaithDatabase.getInstance(application).postDatabaseDao
 
         val viewModelFactory = CommentViewModelFactory(arguments.commentId, postDao, application)
 
-        val commentViewModel = ViewModelProviders.of(this, viewModelFactory).get(CommentViewModel::class.java)
+        return ViewModelProviders.of(this, viewModelFactory).get(CommentViewModel::class.java)
+    }
 
+    private fun initializeAdapter(viewModel: CommentViewModel, application: Application): CommentAdapter{
         val faithApp = application as FaithApplication
         val userId = faithApp.userProfile?.getId()!!
 
         val commentAdapter = CommentAdapter(
             clickListenerAdd = AddCommentListener {
                     newComment ->
-                commentViewModel.onSubmitComment(newComment)
+                viewModel.onSubmitComment(newComment)
             },
             clickListenerReactions = ReactionsListener {
                     commentId ->
-                commentViewModel.onDisplayReactions(commentId)
+                viewModel.onDisplayReactions(commentId)
             }
-            ,commentViewModel, userId)
+            ,viewModel, userId)
 
         binding.commentReactions.adapter = commentAdapter
+        return commentAdapter
+    }
 
+    private fun initializeObservers(adapter: CommentAdapter, commentViewModel: CommentViewModel, arguments: CommentReactionFragmentArgs ){
         commentViewModel.getComment().observe(viewLifecycleOwner, Observer {
             binding.mainComment = it
-        })
+        }) //TODO check if removable with lifecycleowner set to this
 
         commentViewModel.getCommentsOfParent(arguments.commentId).observe(viewLifecycleOwner, Observer {
-            commentAdapter.submitList(it)
+            adapter.submitList(it)
 
         })
 
@@ -67,9 +87,5 @@ class CommentReactionFragment : Fragment() {
                 commentViewModel.onReactionsDisplayed()
             }
         })
-
-        return binding.root
     }
-
-
 }
