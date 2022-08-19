@@ -1,4 +1,4 @@
-package com.example.android.faith.post
+package com.example.android.faith.post.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

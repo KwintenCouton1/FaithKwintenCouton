@@ -6,17 +6,17 @@
     <data>
         <variable
             name="createPostViewModel"
-            type="com.example.android.faith.post.CreatePostViewModel" />
+            type="com.example.android.faith.post.create.CreatePostViewModel" />
         <variable
             name="postViewModel"
-            type="com.example.android.faith.post.PostViewModel" />
+            type="com.example.android.faith.post.list.PostListViewModel" />
     </data>
     
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="post.CreatePostFragment">
+        tools:context=".post.create.CreatePostFragment">
 
         <TextView
             android:id="@+id/label_post_text"

@@ -1,14 +1,10 @@
-package com.example.android.faith.post
+package com.example.android.faith.post.create
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,16 +13,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.database.Link
 import com.example.android.faith.database.Post
 import com.example.android.faith.databinding.FragmentCreatePostBinding
+import com.example.android.faith.post.detail.PostDetailFragmentArgs
 import com.example.android.faith.post.link.LinkAdapter
 import kotlinx.android.synthetic.main.link_view.*
-import okhttp3.internal.notify
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 
@@ -41,7 +36,7 @@ class CreatePostFragment : Fragment() {
 
 
     private val REQUEST_CODE = 100
-    private var imageData: Bitmap? = null
+    private var imageData: ByteArray? = null
 
     private val links : MutableList<Link> = mutableListOf()
 
@@ -73,6 +68,7 @@ class CreatePostFragment : Fragment() {
                 links.addAll(it.links)
                 linkAdapter.submitList(links)
                 linkAdapter.notifyDataSetChanged()
+                imageData = it.post.image
             }
 
         })
@@ -117,10 +113,10 @@ class CreatePostFragment : Fragment() {
         val app = requireActivity().applicationContext as FaithApplication
         val userId = app.userProfile?.getId()
 
-        val imageStream = ByteArrayOutputStream()
-                imageData?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
+//        val imageStream = ByteArrayOutputStream()
+//                imageData?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
 
-        val post = Post(postId = arguments.postKey, text = postText, image= imageStream.toByteArray(), userId = userId!!)//, image = imageData
+        val post = Post(postId = arguments.postKey, text = postText, image= imageData, userId = userId!!)//, image = imageData
         binding.createPostViewModel?.onCreatePost(post, links)
 
         view.findNavController().navigate(R.id.action_createPostFragment_to_postFragment)
@@ -138,7 +134,11 @@ class CreatePostFragment : Fragment() {
             data.let{
 
                 binding.image.setImageURI(data?.data)
-                imageData = (binding.image.drawable as BitmapDrawable).bitmap
+                var imageBitMap = (binding.image.drawable as BitmapDrawable).bitmap
+
+                val imageStream = ByteArrayOutputStream()
+                imageBitMap?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
+                imageData = imageStream.toByteArray()
             }
         }
     }

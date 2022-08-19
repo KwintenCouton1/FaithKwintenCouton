@@ -5,14 +5,14 @@
 <data>
     <variable
         name="postDetailViewModel"
-        type="com.example.android.faith.post.PostDetailViewModel" />
+        type="com.example.android.faith.post.detail.PostDetailViewModel" />
 </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="post.PostDetailFragment">
+    tools:context=".post.detail.PostDetailFragment">
 
     <TextView
         android:id="@+id/textView"
@@ -43,7 +43,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        app:image="@{postDetailViewModel.post.post.image}"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comments"

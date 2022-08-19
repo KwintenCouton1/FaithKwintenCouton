@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/postFragment"
-        android:name="com.example.android.faith.post.PostListFragment"
+        android:name="com.example.android.faith.post.list.PostListFragment"
         android:label="fragment_post_list"
         tools:layout="@layout/fragment_post_list" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/createPostFragment"
-        android:name="com.example.android.faith.post.CreatePostFragment"
+        android:name="com.example.android.faith.post.create.CreatePostFragment"
         android:label="fragment_create_post"
         tools:layout="@layout/fragment_create_post" >
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/postDetailFragment"
-        android:name="com.example.android.faith.post.PostDetailFragment"
+        android:name="com.example.android.faith.post.detail.PostDetailFragment"
         android:label="PostDetailFragment" >
         <argument
             android:name="postKey"

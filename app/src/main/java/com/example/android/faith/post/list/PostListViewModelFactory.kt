@@ -1,4 +1,4 @@
-package com.example.android.faith.post
+package com.example.android.faith.post.list
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -9,7 +9,7 @@ import com.example.android.faith.database.PostDatabaseDao
 import com.example.android.faith.database.UserDao
 import java.lang.IllegalArgumentException
 
-class PostViewModelFactory (
+class PostListViewModelFactory (
     private val dataSource : PostDatabaseDao,
     private val userDao : UserDao,
     private val currentUserId : String,
@@ -18,8 +18,8 @@ class PostViewModelFactory (
         ): ViewModelProvider.Factory{
             @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(PostViewModel::class.java)){
-                    return PostViewModel(dataSource, userDao, currentUserId, /*postKey,*/ application) as T
+                if (modelClass.isAssignableFrom(PostListViewModel::class.java)){
+                    return PostListViewModel(dataSource, userDao, currentUserId, /*postKey,*/ application) as T
                 }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -1,16 +1,14 @@
-package com.example.android.faith.post
+package com.example.android.faith.post.list
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.database.*
 import kotlinx.coroutines.*
-import timber.log.Timber
 
-public class PostViewModel(
+public class PostListViewModel(
     val postDatabaseDao: PostDatabaseDao,
     val userDao : UserDao,
     val currentUserId : String,

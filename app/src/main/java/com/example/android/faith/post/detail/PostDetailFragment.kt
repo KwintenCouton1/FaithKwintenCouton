@@ -1,11 +1,10 @@
-package com.example.android.faith.post
+package com.example.android.faith.post.detail
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -36,7 +35,8 @@ class PostDetailFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_detail, container, false)
 
         val application = requireNotNull(this.activity).application
-        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
+        val arguments =
+            PostDetailFragmentArgs.fromBundle(requireArguments())
 
         val faithApp = application as FaithApplication
         val userId = faithApp.userProfile?.getId()!!
@@ -78,7 +78,11 @@ class PostDetailFragment : Fragment() {
 
         commentViewModel.navigateToCommentReactions.observe(viewLifecycleOwner, Observer{comment ->
             comment?.let{
-                this.findNavController().navigate(PostDetailFragmentDirections.actionPostDetailFragmentToCommentReactionFragment(comment))
+                this.findNavController().navigate(
+                    PostDetailFragmentDirections.actionPostDetailFragmentToCommentReactionFragment(
+                        comment
+                    )
+                )
                 commentViewModel.onReactionsDisplayed()
             }
         })
@@ -151,9 +155,11 @@ class PostDetailFragment : Fragment() {
     }
 
     private fun navigateToEditFragment(){
-        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
+        val arguments =
+            PostDetailFragmentArgs.fromBundle(requireArguments())
 
-        var action = PostDetailFragmentDirections.actionPostDetailFragmentToCreatePostFragment()
+        var action =
+            PostDetailFragmentDirections.actionPostDetailFragmentToCreatePostFragment()
         action.postKey = arguments.postKey
         view?.findNavController()?.navigate(action)
     }

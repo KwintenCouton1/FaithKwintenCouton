@@ -1,12 +1,10 @@
-package com.example.android.faith.post
+package com.example.android.faith.post.list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -17,6 +15,8 @@ import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.database.UserType
 import com.example.android.faith.databinding.FragmentPostListBinding
+import com.example.android.faith.post.PostAdapter
+import com.example.android.faith.post.PostListener
 
 /**
  * A fragment representing a list of Items.
@@ -37,9 +37,9 @@ class PostListFragment : Fragment() {
 
         val app = application as FaithApplication
 
-        val viewModelFactory = PostViewModelFactory(dataSource, userDao, app.userProfile?.getId()!!, application)
+        val viewModelFactory = PostListViewModelFactory(dataSource, userDao, app.userProfile?.getId()!!, application)
 
-        val postViewModel = ViewModelProviders.of(this, viewModelFactory).get(PostViewModel::class.java)
+        val postViewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListViewModel::class.java)
 
         binding.postViewModel = postViewModel
 
@@ -87,7 +87,11 @@ class PostListFragment : Fragment() {
 
         postViewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer{ post ->
             post?.let{
-                this.findNavController().navigate(PostListFragmentDirections.actionPostFragmentToPostDetailFragment(post))
+                this.findNavController().navigate(
+                    PostListFragmentDirections.actionPostFragmentToPostDetailFragment(
+                        post
+                    )
+                )
                 postViewModel.onPostDetailNavigated()
             }
         })

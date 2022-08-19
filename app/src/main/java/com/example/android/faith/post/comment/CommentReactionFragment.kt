@@ -13,7 +13,6 @@ import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentCommentReactionBinding
-import com.example.android.faith.post.PostDetailFragmentDirections
 
 class CommentReactionFragment : Fragment() {
     private lateinit var binding : FragmentCommentReactionBinding

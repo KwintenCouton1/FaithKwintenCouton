@@ -28,7 +28,6 @@ class CommentViewModel(
 
     init{
         comment.addSource(database.getComment(commentKey), comment::setValue)
-        Timber.i(commentKey.toString())
     }
 
     fun getCommentsOfPost(key: Long) :  LiveData<List<Comment>>{
