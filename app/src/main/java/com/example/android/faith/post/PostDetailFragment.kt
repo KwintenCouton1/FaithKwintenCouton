@@ -30,6 +30,7 @@ class PostDetailFragment : Fragment() {
     lateinit var postDetailViewModel : PostDetailViewModel
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -91,9 +92,6 @@ class PostDetailFragment : Fragment() {
             }
         })
 
-        binding.buttonFavorite.setOnClickListener{view :View ->
-            postDetailViewModel.onToggleFavorite(userId)
-        }
 
         binding.react.setOnClickListener { view: View ->
             val app : FaithApplication = requireActivity().applicationContext as FaithApplication
@@ -116,6 +114,12 @@ class PostDetailFragment : Fragment() {
 
         val app : FaithApplication = requireActivity().applicationContext as FaithApplication
 
+        var toggleFavoriteMenuItem = menu.findItem(R.id.toggleFavorite)
+        postDetailViewModel.getPost().observe(viewLifecycleOwner, Observer{
+            toggleFavoriteMenuItem.setChecked(it?.post?.favorited!!)
+        })
+
+
         //editPostMenuItem.setVisible(postDetailViewModel.getPost().value?.post?.userId == app.userProfile?.getId())
 
 
@@ -125,6 +129,10 @@ class PostDetailFragment : Fragment() {
         return when (item.itemId){
             R.id.editPost -> {
                 navigateToEditFragment()
+                true
+            }
+            R.id.toggleFavorite -> {
+                postDetailViewModel.onToggleFavorite()
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -34,16 +34,16 @@ class PostDetailViewModel(
     get() =_navigateToPostList
 
 
-    fun onToggleFavorite(userId : String){
+    fun onToggleFavorite(){
         uiScope.launch {
 
-            toggleFavorite(userId)
+            toggleFavorite()
 
 //          newPost.value = getLatestPostFromDatabase()
         }
     }
 
-    private suspend fun toggleFavorite(userId: String){
+    private suspend fun toggleFavorite(){
         withContext(Dispatchers.IO){
 
             post.value?.post?.favorited = !post.value?.post?.favorited!!

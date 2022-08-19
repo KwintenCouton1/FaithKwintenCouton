@@ -54,4 +54,7 @@ interface PostDatabaseDao {
     @Query("SELECT * FROM POST_TABLE inner JOIN user_table on POST_TABLE.userId = user_table.authId inner join UserCoachCrossRef on user_table.authId = UserCoachCrossRef.userId where coachId like :key ")
     fun getPostsByCoachedUsers(key: String): LiveData<List<PostWithLinksAndComments?>>
 
+    @Query("SELECT * from POST_TABLE WHERE userId like :currentUserId and favorited = 1")
+    fun getFavoritedPosts(currentUserId: String): LiveData<List<PostWithLinksAndComments?>>
+
 }

@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
+import com.example.android.faith.database.UserType
 import com.example.android.faith.databinding.FragmentPostListBinding
 
 /**
@@ -48,11 +51,23 @@ class PostListFragment : Fragment() {
         binding.list.adapter = adapter
 
         postViewModel.currentUser.observe(viewLifecycleOwner, Observer {
-            postViewModel.posts.observe(viewLifecycleOwner, Observer {
-                it.let{
-                    adapter.submitList(it)
-                }
+            binding.favoritesSwitch.isVisible = it?.user?.userType == UserType.JONGERE
+            postViewModel.showFavorites.observe(viewLifecycleOwner, Observer{
+                var showFavorites = it
+                postViewModel.posts.observe(viewLifecycleOwner, Observer {
+                    it.let{
+                        var filteredList = it.filter {
+                            if (showFavorites) {
+                                it?.post?.favorited!!
+                            } else {
+                                true
+                            }
+                        }
+                        adapter.submitList(filteredList)
+                    }
+                })
             })
+
         })
 
 
@@ -64,6 +79,11 @@ class PostListFragment : Fragment() {
 
 
         binding.setLifecycleOwner(this)
+
+        binding.favoritesSwitch.setOnCheckedChangeListener{compoundButton, value ->
+            postViewModel.toggleFavorites(value)
+
+        }
 
         postViewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer{ post ->
             post?.let{

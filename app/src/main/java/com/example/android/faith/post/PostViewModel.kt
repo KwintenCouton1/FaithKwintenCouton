@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.database.*
 import kotlinx.coroutines.*
@@ -19,14 +20,15 @@ public class PostViewModel(
 
     private var viewModelJob = Job()
 
-    //private val _post = postDatabaseDao.get(postKey)
 
     private val _navigateToPostDetail = MutableLiveData<Long?>()
     val navigateToPostDetail
     get() = _navigateToPostDetail
 
-    //val post : LiveData<PostWithLinksAndComments?>
-    //get() = _post
+    private val _showFavorites : MutableLiveData<Boolean> = MutableLiveData(false)
+    val showFavorites: LiveData<Boolean>
+    get() = _showFavorites
+
 
     override fun onCleared() {
         super.onCleared()
@@ -43,9 +45,14 @@ public class PostViewModel(
     private var _managedPosts : LiveData<List<PostWithLinksAndComments?>> = postDatabaseDao.getPostsByCoachedUsers(currentUserId)
 
     private var _createdPosts : LiveData<List<PostWithLinksAndComments?>> = postDatabaseDao.getByChildId(currentUserId)
+
+    private var _favoritedPosts: LiveData<List<PostWithLinksAndComments?>> = postDatabaseDao.getFavoritedPosts(currentUserId)
     val posts: LiveData<List<PostWithLinksAndComments?>>
     get(){
         return if (_currentUser.value?.user?.userType == UserType.JONGERE){
+            if (_showFavorites.value!!) {
+                _favoritedPosts
+            }
             _createdPosts
         } else {
             _managedPosts
@@ -59,7 +66,9 @@ public class PostViewModel(
         val userId : String = app.userProfile?.getId()!!
     }
 
-
+    fun toggleFavorites(value: Boolean){
+        _showFavorites.value = value
+    }
 
     fun onCreatePost(post: Post, links: List<Link>){
         uiScope.launch {
