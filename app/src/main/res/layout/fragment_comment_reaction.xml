@@ -20,7 +20,6 @@
     android:layout_height="match_parent"
     tools:context=".post.comment.CommentReactionFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/commentReactionText"
         android:layout_width="0dp"

@@ -10,7 +10,6 @@
     android:layout_height="match_parent"
     tools:context=".MenuFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <Button
         android:id="@+id/button_my_post"
