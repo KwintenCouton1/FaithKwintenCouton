@@ -15,6 +15,8 @@
     <string name="next">Volgende</string>
     <string name="react">Reageer</string>
 
+    <string name="choose_profile_picture">Kies profielfoto</string>
+
     <string name="edit">Wijzig</string>
     <string name="edit_comment">Comment wijzigen</string>
     <string name="delete">Verwijder</string>
@@ -25,6 +27,8 @@
     <string name="com_auth0_scheme">app</string>
     <string name="login_scopes">openid profile email read:current_user update:current_user_metadata</string>
     <string name="login_audience">https://%1$s/api/v2/</string>
+
+    <string name="edit_user_name">Wijzig naam</string>
 
     <!-- Title -->
     <string name="initial_title">Welcome to the app!</string>

@@ -1,5 +1,7 @@
 package com.example.android.faith
 
+import android.app.AlertDialog
+import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -8,7 +10,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
@@ -19,6 +24,8 @@ import com.auth0.android.provider.CustomTabsOptions
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
+import com.example.android.faith.database.FaithDatabase
+import com.example.android.faith.database.UserDao
 import com.example.android.faith.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
@@ -34,38 +41,70 @@ class Login : AppCompatActivity() {
     private lateinit var account: Auth0
     private var cachedCredentials: Credentials? = null
     private var cachedUserProfile: UserProfile? = null
+    private lateinit var accountViewModel: AccountViewModel
 
     private var REQUEST_CODE = 200
-    private var imageData : Bitmap? = null
+    private var imageData : ByteArray? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val application = requireNotNull(this).application
 
         account = Auth0(
             getString(R.string.com_auth0_client_id),
             getString(R.string.com_auth0_domain)
         )
 
+
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.buttonLogin.setOnClickListener { login() }
         binding.buttonLogout.setOnClickListener { logout() }
-        binding.buttonGet.setOnClickListener { getUserMetadata() }
-        binding.buttonSet.setOnClickListener { setUserMetadata() }
-        binding.buttonToMenu.setOnClickListener {
-            switchToMainActivity()
-        }
-
-        binding.profilePicture.setOnClickListener {
+//        binding.buttonGet.setOnClickListener { getUserMetadata() }
+//        binding.buttonSet.setOnClickListener { setUserMetadata() }
+        binding.buttonProfilePicture.setOnClickListener {
             chooseProfilePicture()
         }
+        binding.buttonToMenu.setOnClickListener {switchToMainActivity()}
+        binding.profilePicture.setOnClickListener { chooseProfilePicture() }
+        binding.buttonEditUserName.setOnClickListener { showEditUserNamePopup() }
 
 
         val app = applicationContext as FaithApplication
         cachedCredentials = app.userCredentials
         cachedUserProfile = app.userProfile
-
+        initializeAccountViewModel(application)
+        accountViewModel.getUser().observe(this, Observer{
+            binding.userEntity = it
+        })
         updateUI()
+    }
+
+    private fun showEditUserNamePopup() {
+        val alert = AlertDialog.Builder(this)
+        alert.setTitle(R.string.edit_user_name)
+        val editText = EditText(this)
+        val user = accountViewModel.getUser().value?.user!!
+
+        editText.setText(user.userName)
+        alert.setView(editText)
+
+        alert.setPositiveButton(R.string.edit) { dialog, buttonId ->
+            user.userName = editText.text.toString()
+            accountViewModel.updateUser(user)
+        }
+        alert.show()
+    }
+
+    private fun initializeAccountViewModel(application: Application) {
+        val userDao = FaithDatabase.getInstance(application).userDao
+        var viewModelFactory = AccountViewModelFactory("", userDao, application)
+        cachedUserProfile?.let{
+             viewModelFactory = AccountViewModelFactory(it.getId()!!, userDao, application)
+        }
+        accountViewModel =  ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
     }
 
     private fun chooseProfilePicture() {
@@ -80,7 +119,18 @@ class Login : AppCompatActivity() {
             data.let{
 
                 binding.profilePicture.setImageURI(data?.data)
-                imageData = (binding.profilePicture.drawable as BitmapDrawable).bitmap
+                var imageBitMap = (binding.profilePicture.drawable as BitmapDrawable).bitmap
+
+                val imageStream = ByteArrayOutputStream()
+                imageBitMap?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
+                imageData = imageStream.toByteArray()
+
+
+                var user = accountViewModel.getUser().value?.user!!
+                user.profilePicture = imageData
+                accountViewModel.updateUser(user)
+
+                binding.profilePicture.setImageBitmap(imageBitMap)
             }
         }
     }
@@ -101,8 +151,9 @@ class Login : AppCompatActivity() {
                     cachedCredentials = credentials
                     showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
 //
-                    var app : FaithApplication = getApplicationContext() as FaithApplication
+                    val app : FaithApplication = getApplicationContext() as FaithApplication
                     app.onLogin(credentials)
+                    initializeAccountViewModel(application)
                     updateUI()
                     showUserProfile()
                 }
@@ -151,6 +202,7 @@ class Login : AppCompatActivity() {
 
                 override fun onSuccess(profile: UserProfile) {
                     cachedUserProfile = profile
+                    initializeAccountViewModel(application)
                     updateUI()
                     switchToMainActivity()
                 }
@@ -169,106 +221,42 @@ class Login : AppCompatActivity() {
 
     }
 
-    private fun getUserMetadata() {
-        // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
-            return
-        }
-
-        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-
-        usersClient
-            .getProfile(cachedUserProfile!!.getId()!!)
-            .start(object : Callback<UserProfile, ManagementException> {
-
-                override fun onFailure(exception: ManagementException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
-                }
-
-                override fun onSuccess(userProfile: UserProfile) {
-                    cachedUserProfile = userProfile
-                    updateUI()
-
-                    val country = userProfile.getUserMetadata()["country"] as String?
-                    val profilePicture = userProfile.getUserMetadata()["profilePicture"] as ByteArray
-                    binding.edittextCountry.setText(country)
-
-
-                    profilePicture.let{
-                        val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size )
-                        binding.profilePicture.setImageBitmap(bitmap)
-                    }
-
-                }
-
-            })
-    }
-
-    private fun setUserMetadata() {
-        // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
-            return
-        }
-
-        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-        val imageStream = ByteArrayOutputStream()
-        imageData?.compress(Bitmap.CompressFormat.PNG, 90, imageStream)
-        val metadata = mapOf(
-            "country" to binding.edittextCountry.text.toString(),
-            "profilePicture" to imageStream.toByteArray()
-        )
-
-        usersClient
-            .updateMetadata(cachedUserProfile!!.getId()!!, metadata)
-            .start(object : Callback<UserProfile, ManagementException> {
-
-                override fun onFailure(exception: ManagementException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
-                    Timber.i(exception.getCode())
-                }
-
-                override fun onSuccess(profile: UserProfile) {
-                    cachedUserProfile = profile
-                    updateUI()
-
-                    showSnackBar(getString(R.string.general_success_message))
-                }
-
-            })
-    }
 
     private fun updateUI() {
         val isLoggedIn = cachedCredentials != null
 
-        binding.textviewTitle.text = if (isLoggedIn) {
-            getString(R.string.logged_in_title)
-        } else {
-            getString(R.string.logged_out_title)
-        }
         binding.buttonLogin.isEnabled = !isLoggedIn
         binding.buttonLogout.isEnabled = isLoggedIn
-        binding.linearlayoutMetadata.isVisible = isLoggedIn
+        //binding.linearlayoutMetadata.isVisible = isLoggedIn
         binding.buttonToMenu.isVisible = isLoggedIn
 
+        binding.buttonProfilePicture.isVisible = isLoggedIn
+        binding.profilePicture.isVisible = isLoggedIn
+
+        binding.buttonEditUserName.isVisible = isLoggedIn
         binding.textviewUserProfile.isVisible = isLoggedIn
+        binding.buttonToMenu.isVisible = isLoggedIn
 
         val userName = cachedUserProfile?.name ?: ""
         val userEmail = cachedUserProfile?.email ?: ""
         binding.textviewUserProfile.text = getString(R.string.user_profile, userName, userEmail)
 
+        binding.profilePicture.setImageBitmap(null)
+
         cachedUserProfile?.let{
-            if (!it.pictureURL.isNullOrEmpty()){
-                binding.profilePicture.setImageURI(Uri.parse(cachedUserProfile?.pictureURL))
+            val userProfile = it
+            accountViewModel?.let {
+                it.getUser().observe(this, Observer {
+                binding.userEntity = it
+            })
             }
 
         }
 
 
-        if (!isLoggedIn) {
-            binding.edittextCountry.setText("")
-        }
+//        if (!isLoggedIn) {
+//            binding.edittextCountry.setText("")
+//        }
     }
 
     private fun showSnackBar(text: String) {
