@@ -1,17 +1,29 @@
 package com.example.android.faith.post.comment
 
+import android.content.ContentProvider
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.android.faith.R
 import com.example.android.faith.database.Comment
 import com.example.android.faith.databinding.CommentViewBinding
 
-class CommentAdapter(val clickListenerAdd: AddCommentListener, val clickListenerReactions: ReactionsListener, val commentViewModel: CommentViewModel, val userId : String): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(CommentDiffCallback()){
+class CommentAdapter(
+    val clickListenerAdd: AddCommentListener,
+    val clickListenerReactions: ReactionsListener,
+    val clickListenerPopup: PopupListener,
+    val userId : String
+    ): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(CommentDiffCallback()){
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(getItem(position)!!, clickListenerAdd, clickListenerReactions, commentViewModel, userId)
+        holder.bind(getItem(position)!!, clickListenerAdd, clickListenerReactions, clickListenerPopup, userId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -19,8 +31,14 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val clickListener
     }
 
 
-    class CommentViewHolder private constructor(val binding: CommentViewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(item : Comment, clickListenerAdd: AddCommentListener, clickListenerReactions: ReactionsListener, commentViewModel: CommentViewModel, userId: String){
+    class CommentViewHolder private constructor(val binding: CommentViewBinding): RecyclerView.ViewHolder(binding.root)
+        //, View.OnCreateContextMenuListener
+    {
+        fun bind(item : Comment,
+                 clickListenerAdd: AddCommentListener,
+                 clickListenerReactions: ReactionsListener,
+                 clickListenerPopup: PopupListener,
+                 userId: String){
             binding.comment = item
             binding.newComment = Comment(
                 postId = item.postId,
@@ -29,9 +47,12 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val clickListener
                 userId = userId
                 )
             binding.clickListenerAdd = clickListenerAdd
-
             binding.clickListenerReactions = clickListenerReactions
+            binding.clickListenerPopup =  clickListenerPopup
+            binding.popupButton.isVisible = userId == item.userId
+
         }
+
 
         companion object{
             fun from(parent: ViewGroup):CommentViewHolder{
@@ -40,6 +61,14 @@ class CommentAdapter(val clickListenerAdd: AddCommentListener, val clickListener
                 return CommentViewHolder(binding)
             }
         }
+
+//        override fun onCreateContextMenu(
+//            contextMenu: ContextMenu?,
+//            view: View?,
+//            menuInfo: ContextMenu.ContextMenuInfo?
+//        ) {
+//            TODO("Not yet implemented")
+//        }
     }
 }
 
@@ -54,7 +83,7 @@ class CommentDiffCallback: DiffUtil.ItemCallback<Comment>(){
         oldItem: Comment,
         newItem: Comment
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.text == newItem.text
     }
 
 
@@ -67,4 +96,17 @@ class AddCommentListener(val clickListener: (newComment : Comment) -> Unit){
 
 class ReactionsListener(val clickListener : (commentId: Long) -> Unit){
     fun onClick(commentId : Long) = clickListener(commentId)
+}
+
+class DeleteCommentListener(val clickListener: (comment : Comment) -> Unit){
+    fun onClick(comment: Comment) = clickListener(comment)
+}
+
+class EditCommentListener(val clickListener: (comment: Comment) -> Unit ){
+    fun onClick(comment: Comment) = clickListener(comment)
+}
+
+class PopupListener(val clickListener: (comment: Comment) -> Unit){
+    fun onClick(comment: Comment) = clickListener(comment)
+
 }

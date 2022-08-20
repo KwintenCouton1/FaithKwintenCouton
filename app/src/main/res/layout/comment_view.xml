@@ -20,20 +20,30 @@
         <variable
             name="clickListenerReactions"
             type="com.example.android.faith.post.comment.ReactionsListener" />
+        <variable
+            name="clickListenerEdit"
+            type="com.example.android.faith.post.comment.EditCommentListener"/>
+        <variable
+            name="clickListenerDelete"
+            type="com.example.android.faith.post.comment.DeleteCommentListener"/>
+        <variable
+            name="clickListenerPopup"
+            type="com.example.android.faith.post.comment.PopupListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.9">
+        app:layout_constraintWidth_percent="0.9"
+        >
 
         <TextView
             android:id="@+id/commentText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:commentText="@{comment}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/popupButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -69,7 +79,7 @@
             android:labelFor="@id/button_react"
             android:minHeight="48dp"
             android:text="@={newComment.text}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/popupButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/commentText" />
 
@@ -89,6 +99,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextComment"
             android:onClick="@{() -> clickListenerReactions.onClick(comment.commentId)}"/>
+
+        <ImageButton
+            android:id="@+id/popupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/commentText"
+            app:srcCompat="@android:drawable/btn_dropdown"
+            android:onClick="@{() -> clickListenerPopup.onClick(comment)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

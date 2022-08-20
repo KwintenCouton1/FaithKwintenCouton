@@ -1,8 +1,12 @@
 package com.example.android.faith.post.detail
 
+import android.app.AlertDialog
 import android.app.Application
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -10,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.android.faith.FaithApplication
+import com.example.android.faith.MainActivity
 import com.example.android.faith.R
 import com.example.android.faith.database.Comment
 import com.example.android.faith.database.FaithDatabase
@@ -17,6 +22,7 @@ import com.example.android.faith.database.PostDatabaseDao
 import com.example.android.faith.databinding.FragmentPostDetailBinding
 import com.example.android.faith.post.comment.*
 import com.example.android.faith.post.link.LinkAdapter
+import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +32,7 @@ import com.example.android.faith.post.link.LinkAdapter
 class PostDetailFragment : Fragment() {
     lateinit var binding : FragmentPostDetailBinding
     lateinit var postDetailViewModel : PostDetailViewModel
+    lateinit var commentViewModel : CommentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +56,7 @@ class PostDetailFragment : Fragment() {
 
         val linkAdapter = initializeLinkAdapter()
 
-        val commentViewModel = initializeCommentViewModel(application, dataSource)
+        commentViewModel = initializeCommentViewModel(application, dataSource)
 
         val commentAdapter = initializeCommentAdapter(commentViewModel, userId)
 
@@ -57,7 +64,51 @@ class PostDetailFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+
         return binding.root
+    }
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        registerForContextMenu(binding.comments)
+//    }
+fun showCommentPopup(v: View, comment: Comment){
+    PopupMenu(requireActivity(), v).apply{
+        setOnMenuItemClickListener{
+            Timber.i(it.itemId.toString())
+            when (it.itemId){
+                R.id.deleteComment -> {
+                    commentViewModel.onDeleteComment(comment)
+                    true
+                }
+                R.id.editComment -> {
+                    showEditCommentPopup(comment)
+                    true
+                }
+                else -> false
+            }
+        }
+        inflate(R.menu.comment_context_menu)
+        show()
+    }
+}
+
+    fun showEditCommentPopup(comment: Comment){
+        val alert = AlertDialog.Builder(requireActivity())
+        alert.setTitle(R.string.edit_comment)
+        val editText = EditText(requireActivity())
+        editText.setText(comment.text)
+        alert.setView(editText)
+
+        alert.setPositiveButton(R.string.edit, DialogInterface.OnClickListener{
+            dialog, buttonId ->
+            comment.text = editText.text.toString()
+            commentViewModel.onUpdateComment(comment)
+
+        })
+
+        alert.show()
+
     }
 
     private fun initializePostDetailViewModel(application: Application, postDao : PostDatabaseDao, arguments: PostDetailFragmentArgs, userId :String): PostDetailViewModel{
@@ -93,8 +144,12 @@ class PostDetailFragment : Fragment() {
             clickListenerReactions = ReactionsListener {
                     commentId ->
                 commentViewModel.onDisplayReactions(commentId)
+            },
+            clickListenerPopup = PopupListener {
+                    comment ->
+                showCommentPopup(requireView(), comment)
             }
-            ,commentViewModel, userId)
+            , userId)
 
         binding.comments.adapter = commentAdapter
         return commentAdapter

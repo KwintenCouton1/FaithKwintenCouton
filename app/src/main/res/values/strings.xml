@@ -16,6 +16,8 @@
     <string name="react">Reageer</string>
 
     <string name="edit">Wijzig</string>
+    <string name="edit_comment">Comment wijzigen</string>
+    <string name="delete">Verwijder</string>
     <string name="reactions">Reacties</string>
 
 

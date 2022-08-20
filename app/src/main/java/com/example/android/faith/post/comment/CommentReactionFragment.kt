@@ -1,22 +1,30 @@
 package com.example.android.faith.post.comment
 
+import android.app.AlertDialog
 import android.app.Application
+import android.content.DialogInterface
 import android.os.Bundle
+import android.view.*
+import android.widget.EditText
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.room.Delete
 import com.example.android.faith.FaithApplication
+import com.example.android.faith.MainActivity
 import com.example.android.faith.R
+import com.example.android.faith.database.Comment
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentCommentReactionBinding
+import timber.log.Timber
 
 class CommentReactionFragment : Fragment() {
     private lateinit var binding : FragmentCommentReactionBinding
+    private lateinit var commentViewModel: CommentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +38,7 @@ class CommentReactionFragment : Fragment() {
         val arguments = CommentReactionFragmentArgs.fromBundle(requireArguments())
 
 
-        val commentViewModel = initializeViewModel(application, arguments)
+        commentViewModel = initializeViewModel(application, arguments)
 
         val commentAdapter = initializeAdapter(commentViewModel, application)
 
@@ -64,11 +72,55 @@ class CommentReactionFragment : Fragment() {
             clickListenerReactions = ReactionsListener {
                     commentId ->
                 viewModel.onDisplayReactions(commentId)
+            },
+            clickListenerPopup = PopupListener {
+                    comment ->
+
+                showCommentPopup(requireView(), comment)
             }
-            ,viewModel, userId)
+            , userId)
 
         binding.commentReactions.adapter = commentAdapter
         return commentAdapter
+    }
+
+    fun showCommentPopup(v: View, comment: Comment){
+        PopupMenu(requireActivity(), v).apply{
+            setOnMenuItemClickListener{
+                Timber.i(it.itemId.toString())
+                when (it.itemId){
+                    R.id.deleteComment -> {
+                        commentViewModel.onDeleteComment(comment)
+                        true
+                    }
+                    R.id.editComment -> {
+                        showEditCommentPopup(comment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            inflate(R.menu.comment_context_menu)
+            show()
+        }
+    }
+
+    fun showEditCommentPopup(comment: Comment){
+        val alert = AlertDialog.Builder(requireActivity())
+        alert.setTitle("TODO: change to string")
+        val editText = EditText(requireActivity())
+        editText.setText(comment.text)
+        alert.setView(editText)
+
+        alert.setPositiveButton("Bewerk", DialogInterface.OnClickListener{
+                dialog, buttonId ->
+            comment.text = editText.text.toString()
+            commentViewModel.onUpdateComment(comment)
+
+        })
+
+        alert.show()
+
     }
 
     private fun initializeObservers(adapter: CommentAdapter, commentViewModel: CommentViewModel, arguments: CommentReactionFragmentArgs ){

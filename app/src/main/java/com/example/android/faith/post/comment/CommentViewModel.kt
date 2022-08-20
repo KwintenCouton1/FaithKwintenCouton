@@ -70,4 +70,31 @@ class CommentViewModel(
         _navigateToCommentReactions.value = null
     }
 
+    fun onDeleteComment(comment: Comment) {
+        uiScope.launch {
+            delete(comment)
+        }
+
+    }
+
+    private suspend fun delete(comment: Comment){
+        withContext(Dispatchers.IO){
+            database.deleteComment(comment)
+        }
+    }
+
+    fun onUpdateComment(comment: Comment) {
+        uiScope.launch {
+            update(comment)
+        }
+
+    }
+
+    private suspend fun update(comment: Comment){
+        withContext(Dispatchers.IO){
+            database.updateComment(comment)
+        }
+    }
+
+
 }

@@ -62,4 +62,7 @@ interface PostDatabaseDao {
     @Query("SELECT * from POST_TABLE WHERE userId like :currentUserId and favorited = 1")
     fun getFavoritedPosts(currentUserId: String): LiveData<List<PostWithLinksAndComments?>>
 
+    @Delete
+    fun deleteComment(comment: Comment)
+
 }
