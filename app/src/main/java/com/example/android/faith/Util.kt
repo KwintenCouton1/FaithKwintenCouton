@@ -2,14 +2,16 @@ package com.example.android.faith
 
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 
 
-    /**
-     * ViewHolder that holds a single [TextView].
-     *
-     * A ViewHolder holds a view for the [RecyclerView] as well as providing additional information
-     * to the RecyclerView such as where on the screen it was last drawn during scrolling.
-     */
+fun Fragment.setActivityTitle(@StringRes id: Int){
+    (activity as AppCompatActivity?)?.supportActionBar?.title = getString(id)
+}
 
-
+fun Fragment.setActivityTitle(title: String){
+    (activity as AppCompatActivity?)?.supportActionBar?.title = title
+}

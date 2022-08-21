@@ -3,7 +3,7 @@ package com.example.android.faith
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.faith.database.user.UserDao
+import com.example.android.faith.database.daos.UserDao
 import java.lang.IllegalArgumentException
 
 class AccountViewModelFactory(

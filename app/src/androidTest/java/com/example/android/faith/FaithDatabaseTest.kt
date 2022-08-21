@@ -20,7 +20,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.android.faith.database.FaithDatabase
-import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.daos.PostDatabaseDao
 import com.example.android.faith.database.post.Post
 import org.junit.Assert.assertEquals
 import org.junit.After

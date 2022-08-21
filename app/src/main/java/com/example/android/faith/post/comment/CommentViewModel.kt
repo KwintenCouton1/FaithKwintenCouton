@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.android.faith.database.post.Comment
-import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.daos.PostDatabaseDao
 import kotlinx.coroutines.*
 
 class CommentViewModel(

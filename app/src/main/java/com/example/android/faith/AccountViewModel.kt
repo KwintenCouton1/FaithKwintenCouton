@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import com.example.android.faith.database.user.User
-import com.example.android.faith.database.user.UserDao
+import com.example.android.faith.database.daos.UserDao
 import com.example.android.faith.database.user.UserWithPostsAndLinksAndComments
 import kotlinx.coroutines.*
 

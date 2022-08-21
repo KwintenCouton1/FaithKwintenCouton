@@ -1,7 +1,11 @@
-package com.example.android.faith.database.post
+package com.example.android.faith.database.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.android.faith.database.post.Comment
+import com.example.android.faith.database.post.Link
+import com.example.android.faith.database.post.Post
+import com.example.android.faith.database.post.PostWithLinksAndComments
 
 @Dao
 interface PostDatabaseDao {

@@ -17,6 +17,7 @@ import com.example.android.faith.database.user.UserType
 import com.example.android.faith.databinding.FragmentPostListBinding
 import com.example.android.faith.post.PostAdapter
 import com.example.android.faith.post.PostListener
+import com.example.android.faith.setActivityTitle
 
 /**
  * A fragment representing a list of Items.
@@ -27,6 +28,8 @@ class PostListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setActivityTitle(R.string.posts_title)
+
         val binding =  DataBindingUtil.inflate<FragmentPostListBinding>(inflater,
             R.layout.fragment_post_list, container, false)
 

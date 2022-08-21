@@ -24,6 +24,7 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setActivityTitle(R.string.menu_title)
         val binding =  DataBindingUtil.inflate<FragmentMenuBinding>(inflater, R.layout.fragment_menu, container, false)
         binding.buttonMyPost.setOnClickListener{ view: View ->
             view.findNavController().navigate(R.id.action_menuFragment_to_postFragment)

@@ -17,10 +17,11 @@ import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.post.Comment
 import com.example.android.faith.database.FaithDatabase
-import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.daos.PostDatabaseDao
 import com.example.android.faith.databinding.FragmentPostDetailBinding
 import com.example.android.faith.post.comment.*
 import com.example.android.faith.post.link.LinkAdapter
+import com.example.android.faith.setActivityTitle
 import timber.log.Timber
 
 /**
@@ -37,7 +38,8 @@ class PostDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        setActivityTitle(R.string.post_detail_title)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_detail, container, false)
 
         val application = requireNotNull(this.activity).application

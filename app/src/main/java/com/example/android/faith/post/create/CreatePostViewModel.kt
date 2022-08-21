@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.android.faith.database.post.Link
 import com.example.android.faith.database.post.Post
-import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.daos.PostDatabaseDao
 import kotlinx.coroutines.*
 
 class CreatePostViewModel(

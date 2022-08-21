@@ -1,8 +1,12 @@
-package com.example.android.faith.database.user
+package com.example.android.faith.database.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.android.faith.database.post.Post
+import com.example.android.faith.database.user.User
+import com.example.android.faith.database.user.UserCoachCrossRef
+import com.example.android.faith.database.user.UserFavoriteCrossRef
+import com.example.android.faith.database.user.UserWithPostsAndLinksAndComments
 
 
 @Dao

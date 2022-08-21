@@ -17,6 +17,7 @@ import com.example.android.faith.R
 import com.example.android.faith.database.post.Comment
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentCommentReactionBinding
+import com.example.android.faith.setActivityTitle
 import timber.log.Timber
 
 class CommentReactionFragment : Fragment() {
@@ -28,6 +29,7 @@ class CommentReactionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        setActivityTitle(R.string.reactions_title)
 
         binding = DataBindingUtil.inflate<FragmentCommentReactionBinding>(inflater, R.layout.fragment_comment_reaction, container, false)
 

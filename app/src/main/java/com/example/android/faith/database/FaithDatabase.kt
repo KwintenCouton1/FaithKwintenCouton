@@ -3,17 +3,21 @@ package com.example.android.faith.database
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.android.faith.database.daos.JokeDao
 import com.example.android.faith.database.post.Comment
 import com.example.android.faith.database.post.Link
 import com.example.android.faith.database.post.Post
-import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.daos.PostDatabaseDao
+import com.example.android.faith.database.daos.UserDao
+import com.example.android.faith.database.joke.DatabaseJoke
 import com.example.android.faith.database.user.*
 
-@Database(entities = [Post::class, Link::class, Comment::class, User::class, UserFavoriteCrossRef::class, UserCoachCrossRef::class], version = 17, exportSchema = false)
+@Database(entities = [Post::class, Link::class, Comment::class, User::class, UserFavoriteCrossRef::class, UserCoachCrossRef::class, DatabaseJoke::class], version = 18, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FaithDatabase : RoomDatabase(){
     abstract val postDatabaseDao: PostDatabaseDao
     abstract val userDao : UserDao
+    abstract val jokeDao : JokeDao
 
 
     companion object{

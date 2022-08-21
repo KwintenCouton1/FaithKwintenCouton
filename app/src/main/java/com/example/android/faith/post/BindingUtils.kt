@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.android.faith.R
 import com.example.android.faith.database.post.Comment
+import com.example.android.faith.database.post.Link
 import com.example.android.faith.database.post.PostWithLinksAndComments
 import com.example.android.faith.joke.JokeApiStatus
 import timber.log.Timber
@@ -50,6 +51,12 @@ fun ImageView.setPostImage(item: ByteArray?){
 
 }
 
+@BindingAdapter("linkText")
+fun TextView.setLinkText(item: Link){
+    item?.let{
+        text = it.linkString
+    }
+}
 
 
 @BindingAdapter("jokeText")

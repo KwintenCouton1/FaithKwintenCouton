@@ -1,6 +1,8 @@
 package com.example.android.faith.post.create
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -9,6 +11,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
+
+
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,6 +27,7 @@ import com.example.android.faith.database.post.Post
 import com.example.android.faith.databinding.FragmentCreatePostBinding
 import com.example.android.faith.post.detail.PostDetailFragmentArgs
 import com.example.android.faith.post.link.LinkAdapter
+import com.example.android.faith.setActivityTitle
 import kotlinx.android.synthetic.main.link_view.*
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
@@ -45,7 +52,7 @@ class CreatePostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        Timber.i("ViewmodelProviders called")
+        setActivityTitle(R.string.create_post_title)
         val application = requireNotNull(this.activity).application
 
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
@@ -84,7 +91,14 @@ class CreatePostFragment : Fragment() {
             savePost(view)
         }
 
+        binding.textPostText.setOnFocusChangeListener {
+                view, value ->
+            if (!value){
+                hideKeyboard(view)
+            }
 
+
+        }
 
 
 
@@ -93,6 +107,7 @@ class CreatePostFragment : Fragment() {
             binding.textUrlText.setText("")
             linkAdapter.submitList(links)
             linkAdapter.notifyDataSetChanged()
+            hideKeyboard(view)
 
         }
         binding.buttonAddImage.setOnClickListener{view: View ->
@@ -104,6 +119,11 @@ class CreatePostFragment : Fragment() {
         binding.setLifecycleOwner(this)
 
         return binding.root
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     private fun savePost(view: View){

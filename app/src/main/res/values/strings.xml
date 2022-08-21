@@ -58,4 +58,9 @@
     <string name="login_failure_message">Failed to log in. %1$s</string>
     <string name="general_failure_with_exception_code">Failed - exception code: %1$s</string>
     <string name="general_success_message">Success!</string>
+    <string name="menu_title">Menu</string>
+    <string name="reactions_title">Reacties</string>
+    <string name="create_post_title">Nieuwe post</string>
+    <string name="post_detail_title">Details</string>
+    <string name="posts_title">Posts</string>
 </resources>
