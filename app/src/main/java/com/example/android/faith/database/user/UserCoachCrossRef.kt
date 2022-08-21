@@ -1,4 +1,4 @@
-package com.example.android.faith.database
+package com.example.android.faith.database.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

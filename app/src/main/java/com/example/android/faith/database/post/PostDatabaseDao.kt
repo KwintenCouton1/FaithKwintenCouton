@@ -1,7 +1,6 @@
-package com.example.android.faith.database
+package com.example.android.faith.database.post
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 @Dao
@@ -24,7 +23,7 @@ interface PostDatabaseDao {
     fun updateLink(link: Link)
 
     @Update
-    fun updateComment(comment:Comment)
+    fun updateComment(comment: Comment)
 
     @Query("DELETE FROM link_table where postId = :key")
     fun deleteLinksOfPost(key : Long)

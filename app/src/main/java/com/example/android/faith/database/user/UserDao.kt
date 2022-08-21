@@ -1,7 +1,8 @@
-package com.example.android.faith.database
+package com.example.android.faith.database.user
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.android.faith.database.post.Post
 
 
 @Dao

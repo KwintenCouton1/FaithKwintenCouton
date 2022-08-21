@@ -3,11 +3,9 @@ package com.example.android.faith
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
-import com.example.android.faith.database.PostDatabaseDao
-import com.example.android.faith.database.User
-import com.example.android.faith.database.UserDao
-import com.example.android.faith.database.UserWithPostsAndLinksAndComments
+import com.example.android.faith.database.user.User
+import com.example.android.faith.database.user.UserDao
+import com.example.android.faith.database.user.UserWithPostsAndLinksAndComments
 import kotlinx.coroutines.*
 
 class AccountViewModel(private val userId : String = "",

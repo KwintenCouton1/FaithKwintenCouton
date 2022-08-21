@@ -1,15 +1,13 @@
 package com.example.android.faith.post.comment
 
 import android.app.Application
-import android.provider.SyncStateContract.Helpers.insert
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.android.faith.database.Comment
-import com.example.android.faith.database.PostDatabaseDao
+import com.example.android.faith.database.post.Comment
+import com.example.android.faith.database.post.PostDatabaseDao
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 class CommentViewModel(
     private val commentKey : Long = 0L,

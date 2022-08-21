@@ -8,7 +8,7 @@
 <data>
     <variable
         name="mainComment"
-        type="com.example.android.faith.database.Comment"/>
+        type="com.example.android.faith.database.post.Comment"/>
     <variable
         name="commentViewModel"
         type="com.example.android.faith.post.comment.CommentViewModel" />

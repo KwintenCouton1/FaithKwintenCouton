@@ -16,8 +16,8 @@ import androidx.navigation.findNavController
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
-import com.example.android.faith.database.Link
-import com.example.android.faith.database.Post
+import com.example.android.faith.database.post.Link
+import com.example.android.faith.database.post.Post
 import com.example.android.faith.databinding.FragmentCreatePostBinding
 import com.example.android.faith.post.detail.PostDetailFragmentArgs
 import com.example.android.faith.post.link.LinkAdapter

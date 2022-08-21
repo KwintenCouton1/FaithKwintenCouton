@@ -1,18 +1,12 @@
 package com.example.android.faith.post.comment
 
-import android.content.ContentProvider
-import android.view.ContextMenu
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.faith.R
-import com.example.android.faith.database.Comment
+import com.example.android.faith.database.post.Comment
 import com.example.android.faith.databinding.CommentViewBinding
 
 class CommentAdapter(

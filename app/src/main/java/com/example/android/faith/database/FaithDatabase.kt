@@ -3,8 +3,11 @@ package com.example.android.faith.database
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.auth0.android.Auth0
-import com.example.android.faith.R
+import com.example.android.faith.database.post.Comment
+import com.example.android.faith.database.post.Link
+import com.example.android.faith.database.post.Post
+import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.user.*
 
 @Database(entities = [Post::class, Link::class, Comment::class, User::class, UserFavoriteCrossRef::class, UserCoachCrossRef::class], version = 17, exportSchema = false)
 @TypeConverters(Converters::class)

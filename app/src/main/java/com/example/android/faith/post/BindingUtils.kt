@@ -1,8 +1,6 @@
 package com.example.android.faith.post
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -13,9 +11,8 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.android.faith.R
-import com.example.android.faith.database.Comment
-import com.example.android.faith.database.Post
-import com.example.android.faith.database.PostWithLinksAndComments
+import com.example.android.faith.database.post.Comment
+import com.example.android.faith.database.post.PostWithLinksAndComments
 import com.example.android.faith.joke.JokeApiStatus
 import timber.log.Timber
 

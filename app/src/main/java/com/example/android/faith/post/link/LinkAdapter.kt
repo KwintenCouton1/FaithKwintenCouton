@@ -5,10 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.faith.database.Link
-import com.example.android.faith.database.Post
+import com.example.android.faith.database.post.Link
 import com.example.android.faith.databinding.LinkViewBinding
-import com.example.android.faith.post.PostAdapter
 
 class LinkAdapter: ListAdapter<Link, LinkAdapter.LinkViewHolder>(LinkDiffCallback()){
 

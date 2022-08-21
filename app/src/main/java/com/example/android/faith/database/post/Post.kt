@@ -1,4 +1,4 @@
-package com.example.android.faith.database
+package com.example.android.faith.database.post
 
 import android.graphics.Bitmap
 import androidx.room.ColumnInfo

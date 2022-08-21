@@ -5,7 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.android.faith.FaithApplication
-import com.example.android.faith.database.*
+import com.example.android.faith.database.post.Link
+import com.example.android.faith.database.post.Post
+import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.post.PostWithLinksAndComments
+import com.example.android.faith.database.user.UserDao
+import com.example.android.faith.database.user.UserType
+import com.example.android.faith.database.user.UserWithPostsAndLinksAndComments
 import kotlinx.coroutines.*
 
 public class PostListViewModel(

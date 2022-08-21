@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.faith.FaithApplication
 import com.example.android.faith.R
 import com.example.android.faith.database.FaithDatabase
-import com.example.android.faith.database.UserType
+import com.example.android.faith.database.user.UserType
 import com.example.android.faith.databinding.FragmentPostListBinding
 import com.example.android.faith.post.PostAdapter
 import com.example.android.faith.post.PostListener

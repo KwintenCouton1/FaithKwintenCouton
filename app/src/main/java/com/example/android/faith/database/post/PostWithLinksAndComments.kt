@@ -1,4 +1,4 @@
-package com.example.android.faith.database
+package com.example.android.faith.database.post
 
 import androidx.room.Embedded
 import androidx.room.Relation

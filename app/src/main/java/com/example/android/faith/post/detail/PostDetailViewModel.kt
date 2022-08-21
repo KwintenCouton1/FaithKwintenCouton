@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.android.faith.database.PostDatabaseDao
-import com.example.android.faith.database.PostWithLinksAndComments
-import com.example.android.faith.database.UserDao
-import com.example.android.faith.database.UserFavoriteCrossRef
+import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.post.PostWithLinksAndComments
+import com.example.android.faith.database.user.UserDao
 import kotlinx.coroutines.*
 
 class PostDetailViewModel(

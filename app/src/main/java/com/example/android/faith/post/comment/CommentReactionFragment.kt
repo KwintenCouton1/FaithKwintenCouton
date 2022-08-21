@@ -8,16 +8,13 @@ import android.view.*
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.room.Delete
 import com.example.android.faith.FaithApplication
-import com.example.android.faith.MainActivity
 import com.example.android.faith.R
-import com.example.android.faith.database.Comment
+import com.example.android.faith.database.post.Comment
 import com.example.android.faith.database.FaithDatabase
 import com.example.android.faith.databinding.FragmentCommentReactionBinding
 import timber.log.Timber

@@ -3,7 +3,7 @@ package com.example.android.faith.post.create
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.faith.database.PostDatabaseDao
+import com.example.android.faith.database.post.PostDatabaseDao
 import java.lang.IllegalArgumentException
 
 class CreatePostViewModelFactory (

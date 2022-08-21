@@ -7,10 +7,10 @@
     <data>
         <variable
             name="comment"
-            type="com.example.android.faith.database.Comment" />
+            type="com.example.android.faith.database.post.Comment" />
         <variable
             name="newComment"
-            type="com.example.android.faith.database.Comment" />
+            type="com.example.android.faith.database.post.Comment" />
         <variable
             name="commentViewModel"
             type="com.example.android.faith.post.comment.CommentViewModel" />

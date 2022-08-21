@@ -14,11 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.android.faith.FaithApplication
-import com.example.android.faith.MainActivity
 import com.example.android.faith.R
-import com.example.android.faith.database.Comment
+import com.example.android.faith.database.post.Comment
 import com.example.android.faith.database.FaithDatabase
-import com.example.android.faith.database.PostDatabaseDao
+import com.example.android.faith.database.post.PostDatabaseDao
 import com.example.android.faith.databinding.FragmentPostDetailBinding
 import com.example.android.faith.post.comment.*
 import com.example.android.faith.post.link.LinkAdapter

@@ -7,7 +7,7 @@
 <data>
     <variable
         name="link"
-        type="com.example.android.faith.database.Link" />
+        type="com.example.android.faith.database.post.Link" />
 </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

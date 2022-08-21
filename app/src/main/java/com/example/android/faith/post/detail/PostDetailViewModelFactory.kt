@@ -2,8 +2,8 @@ package com.example.android.faith.post.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.faith.database.PostDatabaseDao
-import com.example.android.faith.database.UserDao
+import com.example.android.faith.database.post.PostDatabaseDao
+import com.example.android.faith.database.user.UserDao
 import java.lang.IllegalArgumentException
 
 class PostDetailViewModelFactory (

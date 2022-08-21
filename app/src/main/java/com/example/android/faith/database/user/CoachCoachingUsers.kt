@@ -1,15 +1,15 @@
-package com.example.android.faith.database
+package com.example.android.faith.database.user
 
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class UserCoachedBy(
+data class CoachCoachingUsers(
     @Embedded val post : User,
     @Relation(
-        parentColumn = "authId",
-        entityColumn = "coachId",
+        parentColumn = "coachId",
+        entityColumn = "authId",
         associateBy = Junction(UserCoachCrossRef::class)
     )
-    val coachedBy: List<User>
+    val coaches: List<User>
 )

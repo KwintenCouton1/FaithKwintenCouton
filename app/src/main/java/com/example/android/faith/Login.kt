@@ -4,10 +4,7 @@ import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
@@ -18,19 +15,14 @@ import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.Callback
-import com.auth0.android.management.ManagementException
-import com.auth0.android.management.UsersAPIClient
-import com.auth0.android.provider.CustomTabsOptions
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
 import com.example.android.faith.database.FaithDatabase
-import com.example.android.faith.database.UserDao
 import com.example.android.faith.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_create_post.*
-import timber.log.Timber
 import java.io.ByteArrayOutputStream
 
 class Login : AppCompatActivity() {
