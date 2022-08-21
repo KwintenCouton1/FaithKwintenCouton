@@ -27,10 +27,10 @@ class MenuFragment : Fragment() {
         setActivityTitle(R.string.menu_title)
         val binding =  DataBindingUtil.inflate<FragmentMenuBinding>(inflater, R.layout.fragment_menu, container, false)
         binding.buttonMyPost.setOnClickListener{ view: View ->
-            view.findNavController().navigate(R.id.action_menuFragment_to_postFragment)
+            view.findNavController().navigate(MenuFragmentDirections.actionMenuFragmentToPostFragment())
         }
         binding.buttonCreatePost.setOnClickListener{view : View ->
-            view.findNavController().navigate(R.id.action_menuFragment_to_createPostFragment)
+            view.findNavController().navigate(MenuFragmentDirections.actionMenuFragmentToCreatePostFragment())
         }
 
         binding.buttonFact.setOnClickListener{view : View ->

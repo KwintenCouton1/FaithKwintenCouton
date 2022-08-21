@@ -63,4 +63,7 @@
     <string name="create_post_title">Nieuwe post</string>
     <string name="post_detail_title">Details</string>
     <string name="posts_title">Posts</string>
+    <string name="choose_image_option">Kies optie</string>
+    <string name="gallery">Bestaande foto</string>
+    <string name="camera">Camera</string>
 </resources>

@@ -64,9 +64,9 @@ class SleepDatabaseTest {
     @Test
     @Throws(Exception::class)
     fun insertAndGetNight() {
-        val night = Post()
-        sleepDao.insert(night)
-        val tonight = sleepDao.getLatest()
-        assertEquals(tonight?.text, -1)
+        val id = sleepDao.insertPost(Post(text = "PostText", userId = "authId|value"))
+        val post = sleepDao.get(id)
+        assertEquals("PostText", post.value?.post?.text )
+        assertEquals( "authId|value", post.value?.post?.userId)
     }
 }
